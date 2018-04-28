@@ -10,7 +10,7 @@
         android:id="@+id/main_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="com.wordpress.ayo218.popularmovie.MainFragment"
-        tools:layout="@layout/fragment_main" />
+        android:name="com.wordpress.ayo218.popularmovie.MovieFragment"
+        tools:layout="@layout/fragment_movie_main" />
 
 </RelativeLayout>

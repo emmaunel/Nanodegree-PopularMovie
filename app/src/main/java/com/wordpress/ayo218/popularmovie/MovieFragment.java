@@ -11,7 +11,7 @@ import android.view.ViewGroup;
  * Created by Ayo on 4/27/2018.
  */
 
-public class MainFragment extends Fragment {
+public class MovieFragment extends Fragment {
 
     // TODO: 4/28/2018 Build Layout
     // TODO: 4/28/2018 Fill with dummy data
@@ -19,7 +19,7 @@ public class MainFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_main, container, false);
+        View view = inflater.inflate(R.layout.fragment_movie_main, container, false);
         
         return view;
     }
