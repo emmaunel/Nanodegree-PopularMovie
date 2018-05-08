@@ -11,44 +11,46 @@ import android.widget.TextView;
 import com.wordpress.ayo218.popularmovie.R;
 import com.wordpress.ayo218.popularmovie.model.Movie;
 
-import java.util.ArrayList;
+import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
-public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
+public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
 
     private Context context;
-    private ArrayList<Movie> movies;
+    private List<Movie> movieList;
 
-    public MovieAdapter(Context context, ArrayList<Movie> movies) {
+    public MovieAdapter(Context context, List<Movie> movieList) {
         this.context = context;
-        this.movies = movies;
+        this.movieList = movieList;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.fragment_movie_item, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.movie_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.movieImage.setImageResource(movies.get(position).getMovieImage());
-        holder.movieName.setText(movies.get(position).getMovieTitle());
+        holder.bindText(movieList.get(position).getMovie_title());
+        holder.bindImage(movieList.get(position).getMovie_image());
     }
 
     @Override
     public int getItemCount() {
-        return movies.size();
+        return movieList.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
-        @BindView(R.id.movie_image)ImageView movieImage;
-        @BindView(R.id.movie_name_txt) TextView movieName;
+     class ViewHolder extends RecyclerView.ViewHolder{
+        ImageView movie_image;
+        TextView movie_title;
+
         public ViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this, itemView);
+            movie_image = itemView.findViewById(R.id.movie_image);
+            movie_title = itemView.findViewById(R.id.movie_name_txt);
         }
+
+        void bindText(String title){movie_title.setText(title);}
+        void bindImage(int image){movie_image.setImageResource(image);}
     }
 }

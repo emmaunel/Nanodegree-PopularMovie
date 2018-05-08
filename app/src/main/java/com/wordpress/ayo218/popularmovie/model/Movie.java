@@ -1,34 +1,27 @@
 package com.wordpress.ayo218.popularmovie.model;
 
-/**
- * Created by Ayo on 4/28/2018.
- */
-
 public class Movie {
-    private String MovieTitle;
-    private int MovieImage;
+    private String movie_title;
+    private int movie_image;
 
-    public Movie() {
+    public Movie(String movie_title, int movie_image) {
+        this.movie_title = movie_title;
+        this.movie_image = movie_image;
     }
 
-    public Movie(String movieTitle, int movieImage) {
-        MovieTitle = movieTitle;
-        MovieImage = movieImage;
+    public String getMovie_title() {
+        return movie_title;
     }
 
-    public String getMovieTitle() {
-        return MovieTitle;
+    public void setMovie_title(String movie_title) {
+        this.movie_title = movie_title;
     }
 
-    public void setMovieTitle(String movieTitle) {
-        MovieTitle = movieTitle;
+    public int getMovie_image() {
+        return movie_image;
     }
 
-    public int getMovieImage() {
-        return MovieImage;
-    }
-
-    public void setMovieImage(int movieImage) {
-        MovieImage = movieImage;
+    public void setMovie_image(int movie_image) {
+        this.movie_image = movie_image;
     }
 }
