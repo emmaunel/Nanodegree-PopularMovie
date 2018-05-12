@@ -14,7 +14,6 @@ import com.wordpress.ayo218.popularmovie.model.Movie;
 import java.util.List;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
-
     private Context context;
     private List<Movie> movieList;
 
@@ -32,7 +31,9 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.bindText(movieList.get(position).getMovie_title());
-        holder.bindImage(movieList.get(position).getMovie_image());
+
+        // TODO: 5/8/2018 Fix this later 
+        holder.bindText(movieList.get(position).getPoster_path());
     }
 
     @Override
@@ -52,5 +53,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
 
         void bindText(String title){movie_title.setText(title);}
         void bindImage(int image){movie_image.setImageResource(image);}
-    }
+
+     }
 }

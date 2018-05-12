@@ -37,13 +37,13 @@ public class MovieFragment extends Fragment{
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         List<Movie> movieList = new ArrayList<>();
-        movieList.add(new Movie("Games", R.drawable.ic_launcher_background));
-        movieList.add(new Movie("Games", R.drawable.ic_launcher_background));
-        movieList.add(new Movie("Games", R.drawable.ic_launcher_background));
-        movieList.add(new Movie("Games", R.drawable.ic_launcher_background));
-        movieList.add(new Movie("Games", R.drawable.ic_launcher_background));
-        movieList.add(new Movie("Games", R.drawable.ic_launcher_background));
-        movieList.add(new Movie("Games", R.drawable.ic_launcher_background));
+//        movieList.add(new Movie("Games", R.drawable.ic_launcher_background));
+//        movieList.add(new Movie("Games", R.drawable.ic_launcher_background));
+//        movieList.add(new Movie("Games", R.drawable.ic_launcher_background));
+//        movieList.add(new Movie("Games", R.drawable.ic_launcher_background));
+//        movieList.add(new Movie("Games", R.drawable.ic_launcher_background));
+//        movieList.add(new Movie("Games", R.drawable.ic_launcher_background));
+//        movieList.add(new Movie("Games", R.drawable.ic_launcher_background));
 
         recyclerView = view.findViewById(R.id.recyclerview_movie);
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
