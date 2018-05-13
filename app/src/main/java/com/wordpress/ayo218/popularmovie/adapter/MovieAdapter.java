@@ -1,21 +1,26 @@
 package com.wordpress.ayo218.popularmovie.adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.wordpress.ayo218.popularmovie.R;
 import com.wordpress.ayo218.popularmovie.model.Movie;
 
 import java.util.List;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
+    private static final String TAG = "MovieAdapter";
     private Context context;
     private List<Movie> movieList;
+    private static final String POSTER_PATH = "http://image.tmdb.org/t/p/w185/";
+
 
     public MovieAdapter(Context context, List<Movie> movieList) {
         this.context = context;
@@ -30,10 +35,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.bindText(movieList.get(position).getMovie_title());
-
-        // TODO: 5/8/2018 Fix this later 
-        holder.bindText(movieList.get(position).getPoster_path());
+        Picasso.with(context)
+                .load(POSTER_PATH.concat(movieList.get(position).getPoster_path()))
+                .into(holder.movie_image);
+        Log.i(TAG, "The Image url is " + movieList.get(position).getPoster_path());
     }
 
     @Override
@@ -43,16 +48,21 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
 
      class ViewHolder extends RecyclerView.ViewHolder{
         ImageView movie_image;
-        TextView movie_title;
+
 
         public ViewHolder(View itemView) {
             super(itemView);
             movie_image = itemView.findViewById(R.id.movie_image);
-            movie_title = itemView.findViewById(R.id.movie_name_txt);
+
         }
 
-        void bindText(String title){movie_title.setText(title);}
-        void bindImage(int image){movie_image.setImageResource(image);}
+        void bindImage(Uri image){
+            Picasso.with(context)
+                    .load(image)
+                    .into(movie_image);
+        }
 
      }
+
+     public void setMovieList(List<Movie> movieList){this.movieList = movieList;}
 }

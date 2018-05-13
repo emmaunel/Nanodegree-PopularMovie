@@ -21,7 +21,7 @@ public class Movie {
         return poster_path;
     }
 
-    public void setPoster_path(int movie_image) {
+    public void setPoster_path(String poster_path) {
         this.poster_path = poster_path;
     }
 }

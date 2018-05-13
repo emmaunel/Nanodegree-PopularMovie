@@ -15,7 +15,7 @@ import java.util.List;
 public class JsonHelperUtils {
     private static final String TAG = "JsonHelperUtils";
 
-    private List<Movie> getDiscoverMovie(Context context, String json) throws JSONException{
+    public static List<Movie> getDiscoverMovie(Context context, String json) throws JSONException{
         List<Movie> parsedMovie = new ArrayList<>();
 
         JSONObject result = new JSONObject(json);
@@ -28,7 +28,7 @@ public class JsonHelperUtils {
             String img_path = jsonObject.getString("poster_path");
 
             Movie movie = new Movie(title, img_path);
-            Log.e(TAG, "getDiscoverMovie: " + movie);
+            Log.e(TAG, "getDiscoverMovie: " + movie.getMovie_title());
             parsedMovie.add(movie);
         }
 
