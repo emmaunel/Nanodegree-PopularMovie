@@ -32,6 +32,14 @@ public class MovieFragment extends Fragment{
     RecyclerView recyclerView;
     MovieAdapter adapter;
 
+
+    // TODO: 5/17/2018 Add empty view for network failure
+    // TODO: 5/17/2018 Check for network connectivity
+    // TODO: 5/17/2018 Change layour for movie item
+    // TODO: 5/17/2018 Add fragment transition
+    // TODO: 5/17/2018 change the url to sortby and discover...stuff like that
+    // TODO: 5/17/2018 Give user the option to change settings(also preference or bundle to save app state)
+    // TODO: 5/17/2018 Don't forget to use ButterView
     public MovieFragment() {
     }
 
