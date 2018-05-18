@@ -26,8 +26,12 @@ public class JsonHelperUtils {
 
             String title = jsonObject.getString("title");
             String img_path = jsonObject.getString("poster_path");
+            // TODO: 5/17/2018 Check the API for the right name
+            String overview = jsonObject.getString("overview");
+            String release_date = jsonObject.getString("release_date");
+            String vote_average = jsonObject.getString("vote_average");
 
-            Movie movie = new Movie(title, img_path);
+            Movie movie = new Movie(title, img_path, overview, release_date, vote_average);
             Log.e(TAG, "getDiscoverMovie: " + movie.getMovie_title());
             parsedMovie.add(movie);
         }

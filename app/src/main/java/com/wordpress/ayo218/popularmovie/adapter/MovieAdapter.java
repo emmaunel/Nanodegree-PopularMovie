@@ -1,6 +1,7 @@
 package com.wordpress.ayo218.popularmovie.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -8,9 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.wordpress.ayo218.popularmovie.R;
+import com.wordpress.ayo218.popularmovie.activity.DetailActivity;
 import com.wordpress.ayo218.popularmovie.model.Movie;
 
 import java.util.List;
@@ -34,10 +37,19 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         Picasso.with(context)
                 .load(POSTER_PATH.concat(movieList.get(position).getPoster_path()))
                 .into(holder.movie_image);
+
+        holder.movie_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO: 5/18/2018 Start DetailActivity
+                Intent detailIntent = new Intent(context, DetailActivity.class);
+                Toast.makeText(context, movieList.get(position).getMovie_title(), Toast.LENGTH_SHORT).show();
+            }
+        });
         Log.i(TAG, "The Image url is " + movieList.get(position).getPoster_path());
     }
 
