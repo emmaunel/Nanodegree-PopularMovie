@@ -25,6 +25,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
     private static final String POSTER_PATH = "http://image.tmdb.org/t/p/w185/";
 
 
+    //EXTRAS
+    public static final String MOVIE_TITLE_EXTRA = "movie_title";
+    public static final String MOVIE_OVERVIEW_EXTRA = "movie_overview";
+    public static final String MOVIE_RELEASE_DATE_EXTRA = "release_date";
+    public static final String MOVIE_VOTE_AVERAGE_EXTRA = "vote_average";
+
     public MovieAdapter(Context context, List<Movie> movieList) {
         this.context = context;
         this.movieList = movieList;
@@ -47,6 +53,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
             public void onClick(View view) {
                 // TODO: 5/18/2018 Start DetailActivity
                 Intent detailIntent = new Intent(context, DetailActivity.class);
+                detailIntent.putExtra(MOVIE_TITLE_EXTRA, movieList.get(position).getMovie_title());
+                detailIntent.putExtra(MOVIE_OVERVIEW_EXTRA, movieList.get(position).getOverview());
+                detailIntent.putExtra(MOVIE_RELEASE_DATE_EXTRA, movieList.get(position).getRelease_date());
+                detailIntent.putExtra(MOVIE_VOTE_AVERAGE_EXTRA, movieList.get(position).getVote_average());
+                context.startActivity(detailIntent);
+
                 Toast.makeText(context, movieList.get(position).getMovie_title(), Toast.LENGTH_SHORT).show();
             }
         });

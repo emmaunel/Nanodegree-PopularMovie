@@ -12,6 +12,7 @@ import android.widget.Toolbar;
 
 import com.squareup.picasso.Picasso;
 import com.wordpress.ayo218.popularmovie.R;
+import com.wordpress.ayo218.popularmovie.adapter.MovieAdapter;
 import com.wordpress.ayo218.popularmovie.model.Movie;
 
 import butterknife.BindView;
@@ -31,12 +32,20 @@ public class DetailActivity extends AppCompatActivity {
     CollapsingToolbarLayout collapsingToolbarLayout;
 
     Movie movie;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
         initToolbar();
+        getIncomingIntent();
+    }
+
+    private void getIncomingIntent() {
+        if (getIntent().hasExtra(MovieAdapter.MOVIE_TITLE_EXTRA)){
+
+        }
     }
 
     private void initToolbar() {
