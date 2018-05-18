@@ -56,8 +56,8 @@ public class DetailActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
-        collapsingToolbarLayout.setTitle(movie.getMovie_title());
-        collapsingToolbarLayout.setExpandedTitleColor(ContextCompat.getColor(this, android.R.color.transparent));
+//        collapsingToolbarLayout.setTitle(movie.getMovie_title());
+//        collapsingToolbarLayout.setExpandedTitleColor(ContextCompat.getColor(this, android.R.color.transparent));
         Picasso.with(this)
                 .load(R.drawable.ic_launcher_foreground)
                 .fit()
