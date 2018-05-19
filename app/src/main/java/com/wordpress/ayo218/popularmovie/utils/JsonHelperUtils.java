@@ -32,7 +32,16 @@ public class JsonHelperUtils {
             String vote_average = jsonObject.getString("vote_average");
 
             Movie movie = new Movie(title, img_path, overview, release_date, vote_average);
+
+//            Movie movie1 = new Movie();
+//            movie1.setMovie_title(title);
+//            movie1.setPoster_path(img_path);
+//            movie1.setOverview(overview);
+//            movie1.setRelease_date(release_date);
+//            movie1.setVote_average(vote_average);
+
             Log.e(TAG, "getDiscoverMovie: " + movie.getMovie_title());
+            Log.e(TAG, "getDiscoverMovie: " + movie.getRelease_date());
             parsedMovie.add(movie);
         }
 

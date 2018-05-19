@@ -1,12 +1,13 @@
 package com.wordpress.ayo218.popularmovie.activity;
 
 import android.os.Build;
+import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toolbar;
 
@@ -20,6 +21,7 @@ import butterknife.ButterKnife;
 
 public class DetailActivity extends AppCompatActivity {
 
+    private static final String TAG = "DetailActivity";
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.movie_poster)
@@ -31,21 +33,25 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.collapsing_toolbar_layout)
     CollapsingToolbarLayout collapsingToolbarLayout;
 
-    Movie movie;
+    String title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
-        initToolbar();
-        getIncomingIntent();
+
+//        initToolbar();
+//        getIncomingIntent();
     }
 
     private void getIncomingIntent() {
-        if (getIntent().hasExtra(MovieAdapter.MOVIE_TITLE_EXTRA)){
+//        Intent getIntent = getIntent();
+////        title = getIntent.getStringExtra(MovieAdapter.MOVIE_TITLE_EXTRA);
+////        Log.e(TAG, "getIncomingIntent: "+ title);
 
-        }
+        Movie movie = (Movie)getIntent().getParcelableExtra(MovieAdapter.MOVIE_OBJECT);
+        Log.e(TAG, "getIncomingIntent: " + movie);
     }
 
     private void initToolbar() {
@@ -56,7 +62,7 @@ public class DetailActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
-        collapsingToolbarLayout.setTitle(movie.getMovie_title());
+        collapsingToolbarLayout.setTitle(title);
         collapsingToolbarLayout.setExpandedTitleColor(ContextCompat.getColor(this, android.R.color.transparent));
         Picasso.with(this)
                 .load(R.drawable.ic_launcher_foreground)

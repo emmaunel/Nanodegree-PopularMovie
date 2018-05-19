@@ -1,11 +1,17 @@
 package com.wordpress.ayo218.popularmovie.model;
 
-public class Movie {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Movie implements Parcelable{
     private String movie_title;
     private String poster_path;
     private String overview;
     private String release_date;
     private String vote_average;
+
+    public Movie() {
+    }
 
     public Movie(String movie_title, String poster_path, String overview, String release_date, String vote_average) {
         this.movie_title = movie_title;
@@ -14,6 +20,26 @@ public class Movie {
         this.release_date = release_date;
         this.vote_average = vote_average;
     }
+
+    protected Movie(Parcel in) {
+        movie_title = in.readString();
+        poster_path = in.readString();
+        overview = in.readString();
+        release_date = in.readString();
+        vote_average = in.readString();
+    }
+
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
 
     public String getMovie_title() {
         return movie_title;
@@ -53,5 +79,19 @@ public class Movie {
 
     public void setVote_average(String vote_average) {
         this.vote_average = vote_average;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(movie_title);
+        parcel.writeString(poster_path);
+        parcel.writeString(overview);
+        parcel.writeString(release_date);
+        parcel.writeString(vote_average);
     }
 }

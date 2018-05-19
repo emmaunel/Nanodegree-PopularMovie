@@ -30,6 +30,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
     public static final String MOVIE_OVERVIEW_EXTRA = "movie_overview";
     public static final String MOVIE_RELEASE_DATE_EXTRA = "release_date";
     public static final String MOVIE_VOTE_AVERAGE_EXTRA = "vote_average";
+    public static final String MOVIE_OBJECT = "movie";
 
     public MovieAdapter(Context context, List<Movie> movieList) {
         this.context = context;
@@ -52,11 +53,16 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
             @Override
             public void onClick(View view) {
                 // TODO: 5/18/2018 Start DetailActivity
+
+                Movie movie =  new Movie();
+                Log.e(TAG, "onClick: " + movie);
+
                 Intent detailIntent = new Intent(context, DetailActivity.class);
-                detailIntent.putExtra(MOVIE_TITLE_EXTRA, movieList.get(position).getMovie_title());
-                detailIntent.putExtra(MOVIE_OVERVIEW_EXTRA, movieList.get(position).getOverview());
-                detailIntent.putExtra(MOVIE_RELEASE_DATE_EXTRA, movieList.get(position).getRelease_date());
-                detailIntent.putExtra(MOVIE_VOTE_AVERAGE_EXTRA, movieList.get(position).getVote_average());
+//                detailIntent.putExtra(MOVIE_TITLE_EXTRA, movieList.get(position).getMovie_title());
+//                detailIntent.putExtra(MOVIE_OVERVIEW_EXTRA, movieList.get(position).getOverview());
+//                detailIntent.putExtra(MOVIE_RELEASE_DATE_EXTRA, movieList.get(position).getRelease_date());
+//                detailIntent.putExtra(MOVIE_VOTE_AVERAGE_EXTRA, movieList.get(position).getVote_average());
+                detailIntent.putExtra(MOVIE_OBJECT, movie);
                 context.startActivity(detailIntent);
 
                 Toast.makeText(context, movieList.get(position).getMovie_title(), Toast.LENGTH_SHORT).show();
