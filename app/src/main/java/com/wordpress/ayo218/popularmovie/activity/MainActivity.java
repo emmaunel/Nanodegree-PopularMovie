@@ -1,8 +1,9 @@
 package com.wordpress.ayo218.popularmovie.activity;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import com.wordpress.ayo218.popularmovie.R;
@@ -19,8 +20,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void initFragment() {
         MovieFragment fragment = new MovieFragment();
-        FragmentManager manager = getFragmentManager();
-        FragmentTransaction transaction =manager.beginTransaction();
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.homeFragment, fragment);
         transaction.commit();
 

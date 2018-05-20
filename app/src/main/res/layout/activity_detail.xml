@@ -23,6 +23,7 @@
             android:fitsSystemWindows="true"
             android:minHeight="?android:attr/actionBarSize"
             app:expandedTitleMarginEnd="64dp"
+            app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Headline"
             app:expandedTitleMarginStart="48dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 

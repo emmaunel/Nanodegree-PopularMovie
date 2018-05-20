@@ -45,10 +45,8 @@ public class NetworkUtils {
                 while (line != null) {
                     output.append(line);
                     line = reader.readLine();
-                    Log.i(TAG, "getResponseFromHttpUrl: " + line);
                 }
             }
-            Log.i(TAG, "getResponseFromHttpUrl: " + output.toString());
             return output.toString();
         } finally {
             urlConnection.disconnect();

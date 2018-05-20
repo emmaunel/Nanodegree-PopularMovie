@@ -1,7 +1,6 @@
 package com.wordpress.ayo218.popularmovie.utils;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.wordpress.ayo218.popularmovie.model.Movie;
 
@@ -31,9 +30,6 @@ public class JsonHelperUtils {
             String vote_average = jsonObject.getString("vote_average");
 
             Movie movie = new Movie(title, img_path, overview, release_date, vote_average);
-
-            Log.e(TAG, "getDiscoverMovie: " + movie.getMovie_title());
-            Log.e(TAG, "getDiscoverMovie: " + movie.getRelease_date());
             parsedMovie.add(movie);
         }
 
