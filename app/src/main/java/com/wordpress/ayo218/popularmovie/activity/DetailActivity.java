@@ -37,7 +37,15 @@ public class DetailActivity extends AppCompatActivity {
                 .into(imageView);
     }
 
+    // TODO: 5/19/2018 Fix this asap(also the fragment)
+    private void initFragment() {
+//        MovieDetailFragment fragment = new MovieDetailFragment();
+//        FragmentManager manager = getFragmentManager();
+//        FragmentTransaction transaction =manager.beginTransaction();
+//        transaction.replace(R.id.movie_detail_fragment, fragment);
+//        transaction.commit();
 
+    }
     private void initToolbar() {
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 //            setActionBar(toolbar);
