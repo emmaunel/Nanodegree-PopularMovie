@@ -42,7 +42,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        Picasso.with(context)
+        Picasso.get()
                 .load(POSTER_PATH.concat(movieList.get(position).getPoster_path()))
                 .into(holder.movie_image);
         Log.i(TAG, "The Image url is " + movieList.get(position).getPoster_path());
