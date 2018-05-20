@@ -21,6 +21,7 @@ public class NetworkUtils {
         URL url = null;
         try{
             url = new URL(buildUrl.toString());
+            Log.e(TAG, "buildUrl: " + url);
         } catch (MalformedURLException e){
             Log.e(TAG, "buildUrl: " + e.getMessage());
         }

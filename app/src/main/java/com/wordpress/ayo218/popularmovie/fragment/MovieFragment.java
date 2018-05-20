@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.wordpress.ayo218.popularmovie.Constants;
+import com.wordpress.ayo218.popularmovie.EndlessRecyclerViewOnScrollListener;
 import com.wordpress.ayo218.popularmovie.Interface.OnItemClickListener;
 import com.wordpress.ayo218.popularmovie.R;
 import com.wordpress.ayo218.popularmovie.activity.DetailActivity;
@@ -40,6 +42,7 @@ public class MovieFragment extends Fragment {
     MovieAdapter adapter;
     List<Movie> movieList = new ArrayList<>();
     ImageView emtptyView;
+    private EndlessRecyclerViewOnScrollListener listener;
 
 
     // TODO: 5/17/2018 Change layout for movie item
@@ -75,7 +78,26 @@ public class MovieFragment extends Fragment {
         });
         recyclerView.setAdapter(adapter);
 
+        listener = new EndlessRecyclerViewOnScrollListener() {
+            @Override
+            public void onLoadMore() {
+                // TODO: 5/20/2018 Load More function
+                //loadMore();
+            }
+        };
+
+        recyclerView.addOnScrollListener(listener);
         loadMovies();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (isConnected()){
+            loadMovies();
+        } else{
+            showEmptyView();
+        }
     }
 
     private boolean isConnected(){
@@ -86,7 +108,13 @@ public class MovieFragment extends Fragment {
     }
     private void loadMovies() {
         if (isConnected()) {
-            new MovieAsyncTask().execute(Constants.TEST_API);
+            Uri uri = Uri.parse(Constants.BASE_URL)
+                    .buildUpon()
+                    .appendQueryParameter(Constants.API_APPEND, Constants.API_KEY)
+                    .appendQueryParameter(Constants.SORT_APPEND, Constants.SORT_DESC)
+                    .build();
+
+            new MovieAsyncTask().execute(uri.toString());
         } else{
             showEmptyView();
         }

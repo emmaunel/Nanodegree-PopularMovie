@@ -12,13 +12,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.wordpress.ayo218.popularmovie.Constants;
 import com.wordpress.ayo218.popularmovie.R;
 import com.wordpress.ayo218.popularmovie.model.Movie;
 
 public class MovieDetailFragment extends Fragment {
 
 
-    private static final String POSTER_PATH = "http://image.tmdb.org/t/p/w185/";
     private Movie data;
 
 
@@ -43,7 +43,7 @@ public class MovieDetailFragment extends Fragment {
         TextView movie_details = view.findViewById(R.id.text_movie_overview);
 
         Picasso.get()
-                .load(POSTER_PATH.concat(data.getPoster_path()))
+                .load(Constants.BASE_IMAGE_URL.concat(data.getPoster_path()))
                 .into(movie_poster);
 
         movie_title.setText(data.getMovie_title());
