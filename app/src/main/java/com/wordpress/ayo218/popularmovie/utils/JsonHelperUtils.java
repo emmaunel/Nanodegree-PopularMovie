@@ -1,7 +1,6 @@
 package com.wordpress.ayo218.popularmovie.utils;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.wordpress.ayo218.popularmovie.model.Movie;
 
@@ -27,9 +26,8 @@ public class JsonHelperUtils {
             String title = jsonObject.getString("title");
             String img_path = jsonObject.getString("poster_path");
 
-            Movie movie = new Movie(title, img_path);
-            Log.e(TAG, "getDiscoverMovie: " + movie);
-            parsedMovie.add(movie);
+//            Movie movie = new Movie(title, img_path);
+//            parsedMovie.add(movie);
         }
 
         return parsedMovie;

@@ -6,8 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+import com.wordpress.ayo218.popularmovie.OnItemClickListener;
 import com.wordpress.ayo218.popularmovie.R;
 import com.wordpress.ayo218.popularmovie.model.Movie;
 
@@ -16,24 +17,35 @@ import java.util.List;
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
     private Context context;
     private List<Movie> movieList;
+    private OnItemClickListener listener;
 
-    public MovieAdapter(Context context, List<Movie> movieList) {
+    private static final String POSTER_PATH = "http://image.tmdb.org/t/p/w185/";
+
+    public MovieAdapter(Context context, List<Movie> movieList, OnItemClickListener listener) {
         this.context = context;
         this.movieList = movieList;
+        this.listener = listener;
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, final int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.movie_item, parent, false);
-        return new ViewHolder(view);
+        final ViewHolder viewHolder = new ViewHolder(view);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onItemClick(view, viewHolder.getAdapterPosition());
+            }
+        });
+        return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.bindText(movieList.get(position).getMovie_title());
-
-        // TODO: 5/8/2018 Fix this later 
-        holder.bindText(movieList.get(position).getPoster_path());
+        Picasso.get()
+                .load(POSTER_PATH.concat(movieList.get(position).getPoster_path()))
+                .fit()
+                .into(holder.movie_image);
     }
 
     @Override
@@ -43,16 +55,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
 
      class ViewHolder extends RecyclerView.ViewHolder{
         ImageView movie_image;
-        TextView movie_title;
 
         public ViewHolder(View itemView) {
             super(itemView);
             movie_image = itemView.findViewById(R.id.movie_image);
-            movie_title = itemView.findViewById(R.id.movie_name_txt);
         }
-
-        void bindText(String title){movie_title.setText(title);}
-        void bindImage(int image){movie_image.setImageResource(image);}
 
      }
 }
