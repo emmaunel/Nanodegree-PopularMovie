@@ -78,7 +78,6 @@ public class MovieFragment extends Fragment {
             }
         });
         recyclerView.setAdapter(adapter);
-
 //        listener = new EndlessRecyclerViewOnScrollListener() {
 //            @Override
 //            public void onLoadMore() {

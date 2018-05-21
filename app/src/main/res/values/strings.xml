@@ -2,4 +2,10 @@
     <string name="app_name">PopularMovie</string>
     <string name="empty_movie">NO MOVIE</string>
     <string name="sortby">SortBy</string>
+    <string name="sort_by_title">Sort by</string>
+    <string name="action_cancel">Cancel</string>
+
+    <string name="sort_dialog_most_popular">Most Popular</string>
+    <string name="sort_dialog_highest_rated">Highest Rated</string>
+    <string name="sort_dialog_most_rated">Most Rated</string>
 </resources>
