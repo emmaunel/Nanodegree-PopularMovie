@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">PopularMovie</string>
     <string name="empty_movie">NO MOVIE</string>
+    <string name="sortby">SortBy</string>
 </resources>

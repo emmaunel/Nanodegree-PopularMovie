@@ -107,6 +107,7 @@ public class MovieFragment extends Fragment {
         NetworkInfo info = connectivityManager.getActiveNetworkInfo();
         return info != null && info.isConnected();
     }
+
     private void loadMovies() {
         if (isConnected()) {
             Uri uri = Uri.parse(Constants.BASE_URL)

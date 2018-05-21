@@ -24,6 +24,6 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.homeFragment, fragment);
         transaction.commit();
-
     }
+
 }
