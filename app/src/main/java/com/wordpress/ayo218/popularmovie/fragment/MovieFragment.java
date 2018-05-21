@@ -51,6 +51,7 @@ public class MovieFragment extends Fragment {
     // TODO: 5/17/2018 Give user the option to change settings(also preference or bundle to save app state)
     // TODO: 5/17/2018 Don't forget to use ButterView
     // TODO: 5/20/2018 Figure how to do infinite scroll
+
     public MovieFragment() {
     }
 
@@ -78,15 +79,15 @@ public class MovieFragment extends Fragment {
         });
         recyclerView.setAdapter(adapter);
 
-        listener = new EndlessRecyclerViewOnScrollListener() {
-            @Override
-            public void onLoadMore() {
-                // TODO: 5/20/2018 Load More function
-                //loadMore();
-            }
-        };
-
-        recyclerView.addOnScrollListener(listener);
+//        listener = new EndlessRecyclerViewOnScrollListener() {
+//            @Override
+//            public void onLoadMore() {
+//                // TODO: 5/20/2018 Load More function
+//                //loadMore();
+//            }
+//        };
+//
+//        recyclerView.addOnScrollListener(listener);
         loadMovies();
     }
 
@@ -112,6 +113,7 @@ public class MovieFragment extends Fragment {
                     .buildUpon()
                     .appendQueryParameter(Constants.API_APPEND, Constants.API_KEY)
                     .appendQueryParameter(Constants.SORT_APPEND, Constants.SORT_DESC)
+//                    .appendQueryParameter(Constants.PAGE_APPEND, "2")
                     .build();
 
             new MovieAsyncTask().execute(uri.toString());

@@ -51,6 +51,9 @@ public class DetailActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setSupportActionBar(toolbar);
         }
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         data = getIntent().getParcelableExtra(Intent.EXTRA_TEXT);
         collapsingToolbarLayout.setTitle(data.getMovie_title());
 
