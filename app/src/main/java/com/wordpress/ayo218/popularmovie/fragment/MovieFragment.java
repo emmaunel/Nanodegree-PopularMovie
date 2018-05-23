@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -26,6 +25,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.wordpress.ayo218.popularmovie.Constants;
 import com.wordpress.ayo218.popularmovie.Interface.OnItemClickListener;
 import com.wordpress.ayo218.popularmovie.R;
@@ -33,10 +38,10 @@ import com.wordpress.ayo218.popularmovie.SettingActivity;
 import com.wordpress.ayo218.popularmovie.activity.DetailActivity;
 import com.wordpress.ayo218.popularmovie.adapter.MovieAdapter;
 import com.wordpress.ayo218.popularmovie.model.Movie;
-import com.wordpress.ayo218.popularmovie.utils.JsonHelperUtils;
-import com.wordpress.ayo218.popularmovie.utils.NetworkUtils;
 
-import java.net.URL;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,14 +52,15 @@ public class MovieFragment extends Fragment {
     MovieAdapter adapter;
     List<Movie> movieList = new ArrayList<>();
     ImageView emtptyView;
+    String sortby_options;
 
     // TODO: 5/17/2018 Change layout for movie item
     // TODO: 5/17/2018 Add fragment transition
     // TODO: 5/17/2018 Don't forget to use ButterView
     // TODO: 5/20/2018 Figure how to do infinite scroll
+    // TODO: 5/23/2018 Change the color of the UI 
 
-    public MovieFragment() {
-    }
+    public MovieFragment() {}
 
     @Nullable
     @Override
@@ -76,10 +82,10 @@ public class MovieFragment extends Fragment {
                 Intent intent = new Intent(getContext(), DetailActivity.class);
                 intent.putExtra(Intent.EXTRA_TEXT, movieList.get(position));
                 startActivity(intent);
-
             }
         });
         recyclerView.setAdapter(adapter);
+        setHasOptionsMenu(true);
 //        listener = new EndlessRecyclerViewOnScrollListener() {
 //            @Override
 //            public void onLoadMore() {
@@ -89,7 +95,6 @@ public class MovieFragment extends Fragment {
 //        };
 //
 //        recyclerView.addOnScrollListener(listener);
-        loadMovies();
     }
 
     @Override
@@ -102,6 +107,14 @@ public class MovieFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (!movieList.isEmpty() && isConnected()) {
+            movieList.clear();
+        }
+    }
+
     private boolean isConnected() {
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -110,96 +123,75 @@ public class MovieFragment extends Fragment {
     }
 
     private void loadMovies() {
-        // TODO: 5/23/2018 Changing it up to take both sortby and discorver uris
-        if (isConnected()) {
-            Uri uri = null;
-            String sortby_options;
+        Uri uri;
 
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        sortby_options = preferences.getString(getString(R.string.sort), getString(R.string.sort_popular));
 
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-            sortby_options = preferences.getString(getString(R.string.sort), getString(R.string.sort_dialog_most_popular));
+        if (sortby_options.equals(getString(R.string.sort_popular))) {
+            uri = Uri.parse(Constants.POPULAR_BASE_URL).buildUpon()
+                    .appendQueryParameter(Constants.API_APPEND, Constants.API_KEY)
+                    .build();
 
-            if (sortby_options.equals(getString(R.string.sort_dialog_most_popular))){
-                // TODO: 5/23/2018 Use the most popular movies uri
-                uri = Uri.parse(Constants.POPULAR_BASE_URL).buildUpon()
-                        .appendQueryParameter(Constants.API_APPEND, Constants.API_KEY)
-                        .appendQueryParameter(Constants.SORT_APPEND, Constants.SORT_DESC)
-                        .build();
-
-            } else if (sortby_options.equals(getString(R.string.sort_dialog_highest_rated))){
-                // TODO: 5/23/2018 Use the top rated uri
-                uri = Uri.parse(Constants.TOP_RATED_BASE_URL).buildUpon()
-                        .appendQueryParameter(Constants.API_APPEND, Constants.API_KEY)
-                        .appendQueryParameter(Constants.SORT_APPEND, Constants.SORT_DESC)
-                        .build();
-            } else {
-                showEmptyView();
-            }
-
-            new MovieAsyncTask().execute(uri.toString());
+        } else {
+            uri = Uri.parse(Constants.TOP_RATED_BASE_URL).buildUpon()
+                    .appendQueryParameter(Constants.API_APPEND, Constants.API_KEY)
+                    .build();
         }
+
+        String uri_string = uri.toString();
+
+        //Network functionality
+        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, uri_string, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            for (int i = 0; i < 20; i++) {
+                                JSONObject result = response.getJSONArray("results").getJSONObject(i);
+                                String movie_title = result.getString("title");
+                                String img_path = result.getString("poster_path");
+                                String back_drop_path = result.getString("backdrop_path");
+                                String overview = result.getString("overview");
+                                String release_date = result.getString("release_date");
+                                String vote_average = result.getString("vote_average");
+
+                                movieList.add(new Movie(movie_title, img_path, back_drop_path, overview, release_date, vote_average));
+                            }
+                            adapter.notifyDataSetChanged();
+                        } catch (JSONException e) {
+                            Log.e(TAG, "onResponse: " + e.getMessage());
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e(TAG, "onErrorResponse: " + error.getMessage());
+            }
+        });
+        requestQueue.add(request);
     }
 
     private void showEmptyView() {
         emtptyView.setVisibility(View.VISIBLE);
-        Toast.makeText(getContext(), "Please connect to the Internet", Toast.LENGTH_SHORT).show();
-    }
-
-    // TODO: 5/23/2018 Change to Volley 
-    private class MovieAsyncTask extends AsyncTask<String, Void, List<Movie>> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @RequiresApi(api = Build.VERSION_CODES.M)
-        @Override
-        protected List<Movie> doInBackground(String... strings) {
-            String movies = strings[0];
-            URL movieUrl = NetworkUtils.buildUrl(movies);
-
-            try {
-                String jsonResponce = NetworkUtils.getResponseFromHttpUrl(movieUrl);
-                Log.i(TAG, "doInBackground: It worked");
-
-                List<Movie> json = JsonHelperUtils.getDiscoverMovie(getContext(), jsonResponce);
-                Log.i(TAG, "doInBackground: Successful");
-
-                return json;
-            } catch (Exception e) {
-                e.printStackTrace();
-                Log.e(TAG, "doInBackground: " + e.getMessage());
-                return null;
-            }
-        }
-
-
-        @Override
-        protected void onPostExecute(List<Movie> movies) {
-            if (movies != null) {
-                movieList = movies;
-                adapter.setMovieList(movieList);
-                adapter.notifyDataSetChanged();
-            } else {
-                Toast.makeText(getContext(), "NO DATA", Toast.LENGTH_LONG).show();
-            }
-        }
+        Toast.makeText(getContext(), "Please connect to the Internet", Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.main_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.action_sort:
                 startActivity(new Intent(getContext(), SettingActivity.class));
         }
-        
+
         return super.onOptionsItemSelected(item);
     }
 }

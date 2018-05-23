@@ -2,12 +2,12 @@
 <resources>
 
     <string-array name="entries">
-        <item>@string/sort_dialog_most_popular</item>
-        <item>@string/sort_dialog_highest_rated</item>
+        <item>Most Popular</item>
+        <item>Highest Rated</item>
     </string-array>
 
     <string-array name="entries_values">
-        <item>popularity</item>
-        <item>vote_average</item>
+        <item>popularity.desc</item>
+        <item>vote_average.desc</item>
     </string-array>
 </resources>

@@ -29,8 +29,8 @@ public class JsonHelperUtils {
             String release_date = jsonObject.getString("release_date");
             String vote_average = jsonObject.getString("vote_average");
 
-            Movie movie = new Movie(title, img_path, overview, release_date, vote_average);
-            parsedMovie.add(movie);
+//            Movie movie = new Movie(title, img_path, overview, release_date, vote_average);
+//            parsedMovie.add(movie);
         }
 
         return parsedMovie;

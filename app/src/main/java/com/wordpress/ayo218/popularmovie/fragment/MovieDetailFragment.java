@@ -17,14 +17,9 @@ import com.wordpress.ayo218.popularmovie.R;
 import com.wordpress.ayo218.popularmovie.model.Movie;
 
 public class MovieDetailFragment extends Fragment {
-
-
-    // TODO: 5/20/2018 FIx the nestedview 
     private Movie data;
 
-
-    public MovieDetailFragment() {
-    }
+    public MovieDetailFragment() {}
 
     @Nullable
     @Override

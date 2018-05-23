@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
+import com.wordpress.ayo218.popularmovie.Constants;
 import com.wordpress.ayo218.popularmovie.Interface.OnItemClickListener;
 import com.wordpress.ayo218.popularmovie.R;
 import com.wordpress.ayo218.popularmovie.model.Movie;
@@ -20,7 +21,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
     private static final String TAG = "MovieAdapter";
     private Context context;
     private List<Movie> movieList;
-    private static final String POSTER_PATH = "http://image.tmdb.org/t/p/w185/";
     private OnItemClickListener listener;
 
     public MovieAdapter(Context context, List<Movie> movieList, OnItemClickListener listener) {
@@ -45,7 +45,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
         Picasso.get()
-                .load(POSTER_PATH.concat(movieList.get(position).getPoster_path()))
+                .load(Constants.BASE_IMAGE_URL.concat(movieList.get(position).getPoster_path()))
                 .into(holder.movie_image);
     }
 
@@ -57,16 +57,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
      class ViewHolder extends RecyclerView.ViewHolder{
         ImageView movie_image;
 
-
         @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
         public ViewHolder(View itemView) {
             super(itemView);
             movie_image = itemView.findViewById(R.id.movie_image);
-//            movie_image.setTransitionName(String.valueOf(R.string.image_transition));
-
         }
 
      }
-
-     public void setMovieList(List<Movie> movieList){this.movieList = movieList;}
 }

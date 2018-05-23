@@ -5,24 +5,23 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
+import com.wordpress.ayo218.popularmovie.Constants;
 import com.wordpress.ayo218.popularmovie.R;
 import com.wordpress.ayo218.popularmovie.fragment.MovieDetailFragment;
 import com.wordpress.ayo218.popularmovie.model.Movie;
 
 public class DetailActivity extends AppCompatActivity {
-
-    private static final String TAG = "DetailActivity";
-    private static final String POSTER_PATH = "http://image.tmdb.org/t/p/w154/";
     private Movie data;
 
     @Override
@@ -40,7 +39,8 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // TODO: 5/20/2018 Change icon when clicked
-                Toast.makeText(DetailActivity.this, "Added to Favorites", Toast.LENGTH_SHORT).show();
+                // TODO: 5/23/2018 FIx this 
+                Snackbar.make(getCurrentFocus(), "Added to Favorites", Snackbar.LENGTH_LONG).show();
             }
         });
 
@@ -52,9 +52,10 @@ public class DetailActivity extends AppCompatActivity {
         }
         data = getIntent().getParcelableExtra(Intent.EXTRA_TEXT);
         collapsingToolbarLayout.setTitle(data.getMovie_title());
+        collapsingToolbarLayout.setExpandedTitleColor(ContextCompat.getColor(this, android.R.color.transparent));
 
         Picasso.get()
-                .load(POSTER_PATH.concat(data.getPoster_path()))
+                .load(Constants.BASE_IMAGE_URL.concat(data.getBackdrop_path()))
                 .centerCrop()
                 .fit()
                 .into(imageView);
