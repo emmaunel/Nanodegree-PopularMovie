@@ -3,12 +3,14 @@ package com.wordpress.ayo218.popularmovie.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
@@ -16,15 +18,18 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.wordpress.ayo218.popularmovie.Constants;
-import com.wordpress.ayo218.popularmovie.EndlessRecyclerViewOnScrollListener;
 import com.wordpress.ayo218.popularmovie.Interface.OnItemClickListener;
 import com.wordpress.ayo218.popularmovie.R;
+import com.wordpress.ayo218.popularmovie.SettingActivity;
 import com.wordpress.ayo218.popularmovie.activity.DetailActivity;
 import com.wordpress.ayo218.popularmovie.adapter.MovieAdapter;
 import com.wordpress.ayo218.popularmovie.model.Movie;
@@ -42,13 +47,9 @@ public class MovieFragment extends Fragment {
     MovieAdapter adapter;
     List<Movie> movieList = new ArrayList<>();
     ImageView emtptyView;
-    private EndlessRecyclerViewOnScrollListener listener;
-
 
     // TODO: 5/17/2018 Change layout for movie item
     // TODO: 5/17/2018 Add fragment transition
-    // TODO: 5/17/2018 change the url to sortby and discover...stuff like that
-    // TODO: 5/17/2018 Give user the option to change settings(also preference or bundle to save app state)
     // TODO: 5/17/2018 Don't forget to use ButterView
     // TODO: 5/20/2018 Figure how to do infinite scroll
 
@@ -94,32 +95,48 @@ public class MovieFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (isConnected()){
+        if (isConnected()) {
             loadMovies();
-        } else{
+        } else {
             showEmptyView();
         }
     }
 
-    private boolean isConnected(){
+    private boolean isConnected() {
         ConnectivityManager connectivityManager =
-                (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = connectivityManager.getActiveNetworkInfo();
         return info != null && info.isConnected();
     }
 
     private void loadMovies() {
+        // TODO: 5/23/2018 Changing it up to take both sortby and discorver uris
         if (isConnected()) {
-            Uri uri = Uri.parse(Constants.BASE_URL)
-                    .buildUpon()
-                    .appendQueryParameter(Constants.API_APPEND, Constants.API_KEY)
-                    .appendQueryParameter(Constants.SORT_APPEND, Constants.SORT_DESC)
-//                    .appendQueryParameter(Constants.PAGE_APPEND, "2")
-                    .build();
+            Uri uri = null;
+            String sortby_options;
+
+
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+            sortby_options = preferences.getString(getString(R.string.sort), getString(R.string.sort_dialog_most_popular));
+
+            if (sortby_options.equals(getString(R.string.sort_dialog_most_popular))){
+                // TODO: 5/23/2018 Use the most popular movies uri
+                uri = Uri.parse(Constants.POPULAR_BASE_URL).buildUpon()
+                        .appendQueryParameter(Constants.API_APPEND, Constants.API_KEY)
+                        .appendQueryParameter(Constants.SORT_APPEND, Constants.SORT_DESC)
+                        .build();
+
+            } else if (sortby_options.equals(getString(R.string.sort_dialog_highest_rated))){
+                // TODO: 5/23/2018 Use the top rated uri
+                uri = Uri.parse(Constants.TOP_RATED_BASE_URL).buildUpon()
+                        .appendQueryParameter(Constants.API_APPEND, Constants.API_KEY)
+                        .appendQueryParameter(Constants.SORT_APPEND, Constants.SORT_DESC)
+                        .build();
+            } else {
+                showEmptyView();
+            }
 
             new MovieAsyncTask().execute(uri.toString());
-        } else{
-            showEmptyView();
         }
     }
 
@@ -128,6 +145,7 @@ public class MovieFragment extends Fragment {
         Toast.makeText(getContext(), "Please connect to the Internet", Toast.LENGTH_SHORT).show();
     }
 
+    // TODO: 5/23/2018 Change to Volley 
     private class MovieAsyncTask extends AsyncTask<String, Void, List<Movie>> {
 
         @Override
@@ -149,7 +167,7 @@ public class MovieFragment extends Fragment {
                 Log.i(TAG, "doInBackground: Successful");
 
                 return json;
-            } catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
                 Log.e(TAG, "doInBackground: " + e.getMessage());
                 return null;
@@ -169,6 +187,21 @@ public class MovieFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.main_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_sort:
+                startActivity(new Intent(getContext(), SettingActivity.class));
+        }
+        
+        return super.onOptionsItemSelected(item);
+    }
 }
 
 

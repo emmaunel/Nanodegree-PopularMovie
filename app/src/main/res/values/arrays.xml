@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string-array name="pref_sort_by_labels">
+    <string-array name="entries">
         <item>@string/sort_dialog_most_popular</item>
         <item>@string/sort_dialog_highest_rated</item>
-        <item>@string/sort_dialog_most_rated</item>
+    </string-array>
+
+    <string-array name="entries_values">
+        <item>popularity</item>
+        <item>vote_average</item>
     </string-array>
 </resources>

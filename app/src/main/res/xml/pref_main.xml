@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="@string/sortby"
-        android:title="@string/sortby"/>
-
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="@string/sortby"
-        android:title="Top Rated"/>
-
-
+    <ListPreference
+        android:title="@string/settings"
+        android:key="@string/sort"
+        android:entries="@array/entries"
+        android:entryValues="@array/entries_values"
+        android:defaultValue="" />
 </PreferenceScreen>
