@@ -23,7 +23,7 @@ public class SortDialogFragment extends DialogFragment{
         builder.setSingleChoiceItems(R.array.pref_sort_by_labels, 0, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-
+                dialogInterface.dismiss();
             }
         });
 

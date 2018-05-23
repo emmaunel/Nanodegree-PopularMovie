@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
 import com.wordpress.ayo218.popularmovie.R;
 import com.wordpress.ayo218.popularmovie.fragment.MovieDetailFragment;
 import com.wordpress.ayo218.popularmovie.model.Movie;
@@ -21,7 +22,7 @@ import com.wordpress.ayo218.popularmovie.model.Movie;
 public class DetailActivity extends AppCompatActivity {
 
     private static final String TAG = "DetailActivity";
-    private static final String POSTER_PATH = "http://image.tmdb.org/t/p/w185/";
+    private static final String POSTER_PATH = "http://image.tmdb.org/t/p/w154/";
     private Movie data;
 
     @Override
@@ -43,11 +44,6 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
-        // TODO: 5/20/2018 Fix this now.... 
-//        Picasso.get()
-//                .load(POSTER_PATH.concat(data.getPoster_path()))
-//                .into(imageView);
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setSupportActionBar(toolbar);
         }
@@ -56,6 +52,12 @@ public class DetailActivity extends AppCompatActivity {
         }
         data = getIntent().getParcelableExtra(Intent.EXTRA_TEXT);
         collapsingToolbarLayout.setTitle(data.getMovie_title());
+
+        Picasso.get()
+                .load(POSTER_PATH.concat(data.getPoster_path()))
+                .centerCrop()
+                .fit()
+                .into(imageView);
 
         intiFragment();
     }

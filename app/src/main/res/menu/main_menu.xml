@@ -4,8 +4,8 @@
 
     <item
         android:title="@string/sortby"
-        android:id="@+id/main_menu"
-        app:showAsAction="always"
-        android:icon="@drawable/ic_sort"/>
+        android:id="@+id/action_settings"
+        app:showAsAction="never"
+        android:orderInCategory="100"/>
 
 </menu>

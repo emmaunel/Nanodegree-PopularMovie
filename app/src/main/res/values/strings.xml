@@ -8,4 +8,7 @@
     <string name="sort_dialog_most_popular">Most Popular</string>
     <string name="sort_dialog_highest_rated">Highest Rated</string>
     <string name="sort_dialog_most_rated">Most Rated</string>
+
+    <string name="image_transition">ImageTransition</string>
+    <string name="settings">Settings</string>
 </resources>

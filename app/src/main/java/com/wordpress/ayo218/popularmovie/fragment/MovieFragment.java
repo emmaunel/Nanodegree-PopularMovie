@@ -75,6 +75,7 @@ public class MovieFragment extends Fragment {
                 Intent intent = new Intent(getContext(), DetailActivity.class);
                 intent.putExtra(Intent.EXTRA_TEXT, movieList.get(position));
                 startActivity(intent);
+
             }
         });
         recyclerView.setAdapter(adapter);
@@ -167,6 +168,7 @@ public class MovieFragment extends Fragment {
             }
         }
     }
+
 }
 
 

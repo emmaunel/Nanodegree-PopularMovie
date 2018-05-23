@@ -1,6 +1,8 @@
 package com.wordpress.ayo218.popularmovie.adapter;
 
 import android.content.Context;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,9 +58,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
         ImageView movie_image;
 
 
+        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
         public ViewHolder(View itemView) {
             super(itemView);
             movie_image = itemView.findViewById(R.id.movie_image);
+//            movie_image.setTransitionName(String.valueOf(R.string.image_transition));
 
         }
 
