@@ -7,16 +7,14 @@
     app:cardBackgroundColor="@android:color/white"
     app:cardCornerRadius="2dp"
     app:cardElevation="2dp"
-    android:layout_margin="2dp"
     app:cardPreventCornerOverlap="false"
     app:cardUseCompatPadding="true">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/movie_item_height">
+        android:layout_height="wrap_content">
 
         <ImageView
-
             android:id="@+id/movie_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

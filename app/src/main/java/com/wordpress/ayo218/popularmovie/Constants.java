@@ -10,8 +10,6 @@ public class Constants{
 
 
     public static final String API_APPEND = "api_key";
-    public static final String SORT_APPEND = "&sort_by";
-    public static final String SORT_DESC = "popularity.desc";
     public static final String PAGE_APPEND = "page";
 
 }

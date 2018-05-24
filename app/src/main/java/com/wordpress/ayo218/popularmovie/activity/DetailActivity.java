@@ -21,7 +21,16 @@ import com.wordpress.ayo218.popularmovie.R;
 import com.wordpress.ayo218.popularmovie.fragment.MovieDetailFragment;
 import com.wordpress.ayo218.popularmovie.model.Movie;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class DetailActivity extends AppCompatActivity {
+
+    @BindView(R.id.collapsing_toolbar_layout) CollapsingToolbarLayout collapsingToolbarLayout;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.fab) FloatingActionButton fab;
+    @BindView(R.id.scrollView) NestedScrollView scrollView;
+    @BindView(R.id.movie_poster) ImageView imageView;
     private Movie data;
 
     @Override
@@ -29,11 +38,7 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar_layout);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        ImageView imageView = findViewById(R.id.movie_poster);
-        FloatingActionButton fab = findViewById(R.id.fab);
-        NestedScrollView scrollView = findViewById(R.id.scrollView);
+        ButterKnife.bind(this);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

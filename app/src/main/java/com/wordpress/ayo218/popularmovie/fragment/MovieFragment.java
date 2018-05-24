@@ -45,17 +45,19 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MovieFragment extends Fragment {
     private static final String TAG = "MovieFragment";
 
-    RecyclerView recyclerView;
+    @BindView(R.id.recyclerview_movie) RecyclerView recyclerView;
+    @BindView(R.id.img_empty_view) ImageView emptyView;
+
     MovieAdapter adapter;
     List<Movie> movieList = new ArrayList<>();
-    ImageView emtptyView;
     String sortby_options;
 
-    // TODO: 5/17/2018 Change layout for movie item
-    // TODO: 5/17/2018 Don't forget to use ButterView
     // TODO: 5/20/2018 Figure how to do infinite scroll
 
     public MovieFragment() {}
@@ -63,14 +65,14 @@ public class MovieFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        ButterKnife.bind(this, view);
+        return view;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        emtptyView = view.findViewById(R.id.img_empty_view);
-        recyclerView = view.findViewById(R.id.recyclerview_movie);
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
@@ -173,7 +175,7 @@ public class MovieFragment extends Fragment {
     }
 
     private void showEmptyView() {
-        emtptyView.setVisibility(View.VISIBLE);
+        emptyView.setVisibility(View.VISIBLE);
         Toast.makeText(getContext(), "Please connect to the Internet", Toast.LENGTH_LONG).show();
     }
 
