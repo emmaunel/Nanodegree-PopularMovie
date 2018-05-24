@@ -17,6 +17,9 @@ import com.wordpress.ayo218.popularmovie.model.Movie;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
     private static final String TAG = "MovieAdapter";
     private Context context;
@@ -29,6 +32,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
         this.listener = listener;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.movie_item, parent, false);
@@ -55,12 +59,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
     }
 
      class ViewHolder extends RecyclerView.ViewHolder{
+        @BindView(R.id.movie_image)
         ImageView movie_image;
 
         @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
         public ViewHolder(View itemView) {
             super(itemView);
-            movie_image = itemView.findViewById(R.id.movie_image);
+            ButterKnife.bind(this, itemView);
         }
 
      }

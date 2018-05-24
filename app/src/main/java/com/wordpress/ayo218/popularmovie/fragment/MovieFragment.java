@@ -55,10 +55,8 @@ public class MovieFragment extends Fragment {
     String sortby_options;
 
     // TODO: 5/17/2018 Change layout for movie item
-    // TODO: 5/17/2018 Add fragment transition
     // TODO: 5/17/2018 Don't forget to use ButterView
     // TODO: 5/20/2018 Figure how to do infinite scroll
-    // TODO: 5/23/2018 Change the color of the UI 
 
     public MovieFragment() {}
 

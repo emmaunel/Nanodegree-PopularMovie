@@ -39,8 +39,7 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 // TODO: 5/20/2018 Change icon when clicked
-                // TODO: 5/23/2018 FIx this 
-                Snackbar.make(getCurrentFocus(), "Added to Favorites", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(findViewById(R.id.coordinator_layout), "Added to Favorites", Snackbar.LENGTH_LONG).show();
             }
         });
 
