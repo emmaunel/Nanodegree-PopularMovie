@@ -9,10 +9,13 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -51,16 +54,28 @@ import butterknife.ButterKnife;
 public class MovieFragment extends Fragment {
     private static final String TAG = "MovieFragment";
 
-    @BindView(R.id.recyclerview_movie) RecyclerView recyclerView;
-    @BindView(R.id.img_empty_view) ImageView emptyView;
+    @BindView(R.id.recyclerview_movie)
+    RecyclerView recyclerView;
+    @BindView(R.id.img_empty_view)
+    ImageView emptyView;
+    @BindView(R.id.swipe_refresh)
+    SwipeRefreshLayout refreshLayout;
+
+    private int page = 1;
+    int visibleThereshold = 5;
+    int lastVisibleItem, totalItemCount;
+    boolean isLoading;
+
 
     MovieAdapter adapter;
     List<Movie> movieList = new ArrayList<>();
     String sortby_options;
 
     // TODO: 5/20/2018 Figure how to do infinite scroll
+    // TODO: 5/24/2018 move the swipe to the bottom(load more "page")
 
-    public MovieFragment() {}
+    public MovieFragment() {
+    }
 
     @Nullable
     @Override
@@ -73,7 +88,7 @@ public class MovieFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
+        final GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
         adapter = new MovieAdapter(getContext(), movieList, new OnItemClickListener() {
@@ -86,25 +101,58 @@ public class MovieFragment extends Fragment {
         });
         recyclerView.setAdapter(adapter);
         setHasOptionsMenu(true);
-//        listener = new EndlessRecyclerViewOnScrollListener() {
-//            @Override
-//            public void onLoadMore() {
-//                // TODO: 5/20/2018 Load More function
-//                //loadMore();
-//            }
-//        };
-//
-//        recyclerView.addOnScrollListener(listener);
+
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //iternateing throught the pages
+                page = page + 1;
+                loadMovies(page);
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshLayout.setRefreshing(false);
+                    }
+                }, 3000);
+
+                Snackbar.make(getView(), "More Movies Loaded", Snackbar.LENGTH_LONG);
+            }
+        });
+        refreshLayout.setColorSchemeResources(R.color.colorPrimary,
+                android.R.color.holo_green_dark,
+                android.R.color.holo_orange_dark,
+                android.R.color.holo_blue_dark);
+
+        // TODO: 5/24/2018 Working here 
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                totalItemCount = layoutManager.getItemCount();
+                lastVisibleItem = layoutManager.findLastVisibleItemPosition();
+
+                if (!isLoading && totalItemCount <= (lastVisibleItem + visibleThereshold)) {
+                    Log.e(TAG, "onScrolled: Here");
+                }
+                isLoading = true;
+            }
+        });
     }
 
     @Override
     public void onStart() {
         super.onStart();
         if (isConnected()) {
-            loadMovies();
+            loadMovies(page);
         } else {
             showEmptyView();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -122,7 +170,7 @@ public class MovieFragment extends Fragment {
         return info != null && info.isConnected();
     }
 
-    private void loadMovies() {
+    private void loadMovies(int page) {
         Uri uri;
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
@@ -131,7 +179,9 @@ public class MovieFragment extends Fragment {
         if (sortby_options.equals(getString(R.string.sort_popular))) {
             uri = Uri.parse(Constants.POPULAR_BASE_URL).buildUpon()
                     .appendQueryParameter(Constants.API_APPEND, Constants.API_KEY)
+                    .appendQueryParameter(Constants.PAGE_APPEND, String.valueOf(page))
                     .build();
+            Log.e(TAG, "loadMovies: " + uri);
 
         } else {
             uri = Uri.parse(Constants.TOP_RATED_BASE_URL).buildUpon()
