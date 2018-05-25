@@ -26,7 +26,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -69,7 +68,7 @@ public class MovieFragment extends Fragment {
 
     MovieAdapter adapter;
     List<Movie> movieList = new ArrayList<>();
-    String sortby_options;
+    String sort_by_options;
 
     // TODO: 5/20/2018 Figure how to do infinite scroll
     // TODO: 5/24/2018 move the swipe to the bottom(load more "page")
@@ -105,7 +104,7 @@ public class MovieFragment extends Fragment {
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                //iternateing throught the pages
+                //iterating thought the pages
                 page = page + 1;
                 loadMovies(page);
 
@@ -116,7 +115,7 @@ public class MovieFragment extends Fragment {
                     }
                 }, 3000);
 
-                Snackbar.make(getView(), "More Movies Loaded", Snackbar.LENGTH_LONG);
+
             }
         });
         refreshLayout.setColorSchemeResources(R.color.colorPrimary,
@@ -174,9 +173,9 @@ public class MovieFragment extends Fragment {
         Uri uri;
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        sortby_options = preferences.getString(getString(R.string.sort), getString(R.string.sort_popular));
+        sort_by_options = preferences.getString(getString(R.string.sort), getString(R.string.sort_popular));
 
-        if (sortby_options.equals(getString(R.string.sort_popular))) {
+        if (sort_by_options.equals(getString(R.string.sort_popular))) {
             uri = Uri.parse(Constants.POPULAR_BASE_URL).buildUpon()
                     .appendQueryParameter(Constants.API_APPEND, Constants.API_KEY)
                     .appendQueryParameter(Constants.PAGE_APPEND, String.valueOf(page))
@@ -226,7 +225,7 @@ public class MovieFragment extends Fragment {
 
     private void showEmptyView() {
         emptyView.setVisibility(View.VISIBLE);
-        Toast.makeText(getContext(), "Please connect to the Internet", Toast.LENGTH_LONG).show();
+        Snackbar.make(getView(), "Cannot connect to the Internet", Snackbar.LENGTH_LONG).show();
     }
 
     @Override
