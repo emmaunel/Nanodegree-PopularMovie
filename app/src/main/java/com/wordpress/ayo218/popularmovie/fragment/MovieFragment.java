@@ -70,9 +70,6 @@ public class MovieFragment extends Fragment {
     List<Movie> movieList = new ArrayList<>();
     String sort_by_options;
 
-    // TODO: 5/20/2018 Figure how to do infinite scroll
-    // TODO: 5/24/2018 move the swipe to the bottom(load more "page")
-
     public MovieFragment() {
     }
 

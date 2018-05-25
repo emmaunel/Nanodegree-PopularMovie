@@ -12,4 +12,5 @@
     <string name="toprated">TopRated</string>
 
     <string name="sort">sort</string>
+    <string name="error_image">Error Image</string>
 </resources>
