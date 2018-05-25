@@ -13,4 +13,8 @@
 
     <string name="sort">sort</string>
     <string name="error_image">Error Image</string>
+    <string name="movie_backdrop">Movie BackDrop</string>
+    <string name="movie_poster">Movie Poster</string>
+    <string name="movie_title">Movie Title</string>
+    <string name="overview">Overview</string>
 </resources>

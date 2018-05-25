@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
@@ -61,21 +62,16 @@ public class MovieFragment extends Fragment {
     SwipeRefreshLayout refreshLayout;
 
     private int page = 1;
-    int visibleThereshold = 5;
-    int lastVisibleItem, totalItemCount;
-    boolean isLoading;
 
-
-    MovieAdapter adapter;
-    List<Movie> movieList = new ArrayList<>();
-    String sort_by_options;
+    private MovieAdapter adapter;
+    private final List<Movie> movieList = new ArrayList<>();
 
     public MovieFragment() {
     }
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, view);
         return view;
@@ -83,7 +79,7 @@ public class MovieFragment extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         final GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
@@ -120,20 +116,6 @@ public class MovieFragment extends Fragment {
                 android.R.color.holo_orange_dark,
                 android.R.color.holo_blue_dark);
 
-        // TODO: 5/24/2018 Working here 
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                totalItemCount = layoutManager.getItemCount();
-                lastVisibleItem = layoutManager.findLastVisibleItemPosition();
-
-                if (!isLoading && totalItemCount <= (lastVisibleItem + visibleThereshold)) {
-                    Log.e(TAG, "onScrolled: Here");
-                }
-                isLoading = true;
-            }
-        });
     }
 
     @Override
@@ -147,11 +129,6 @@ public class MovieFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
     public void onPause() {
         super.onPause();
         if (!movieList.isEmpty() && isConnected()) {
@@ -159,6 +136,7 @@ public class MovieFragment extends Fragment {
         }
     }
 
+    @SuppressWarnings("ConstantConditions")
     private boolean isConnected() {
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -166,18 +144,19 @@ public class MovieFragment extends Fragment {
         return info != null && info.isConnected();
     }
 
+    @SuppressWarnings("ConstantConditions")
     private void loadMovies(int page) {
         Uri uri;
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        sort_by_options = preferences.getString(getString(R.string.sort), getString(R.string.sort_popular));
+        String sort_by_options = preferences.getString(getString(R.string.sort), getString(R.string.sort_popular));
 
         if (sort_by_options.equals(getString(R.string.sort_popular))) {
             uri = Uri.parse(Constants.POPULAR_BASE_URL).buildUpon()
                     .appendQueryParameter(Constants.API_APPEND, Constants.API_KEY)
                     .appendQueryParameter(Constants.PAGE_APPEND, String.valueOf(page))
                     .build();
-            Log.e(TAG, "loadMovies: " + uri);
+
 
         } else {
             uri = Uri.parse(Constants.TOP_RATED_BASE_URL).buildUpon()
@@ -222,6 +201,7 @@ public class MovieFragment extends Fragment {
 
     private void showEmptyView() {
         emptyView.setVisibility(View.VISIBLE);
+        //noinspection ConstantConditions
         Snackbar.make(getView(), "Cannot connect to the Internet", Snackbar.LENGTH_LONG).show();
     }
 

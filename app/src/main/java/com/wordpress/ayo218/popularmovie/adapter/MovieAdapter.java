@@ -2,6 +2,7 @@ package com.wordpress.ayo218.popularmovie.adapter;
 
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -21,10 +22,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
-    private static final String TAG = "MovieAdapter";
-    private Context context;
-    private List<Movie> movieList;
-    private OnItemClickListener listener;
+    private final Context context;
+    private final List<Movie> movieList;
+    private final OnItemClickListener listener;
 
     public MovieAdapter(Context context, List<Movie> movieList, OnItemClickListener listener) {
         this.context = context;
@@ -32,9 +32,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
         this.listener = listener;
     }
 
+    @NonNull
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.movie_item, parent, false);
         final ViewHolder viewHolder = new ViewHolder(view);
         view.setOnClickListener(new View.OnClickListener() {
@@ -47,7 +48,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         Picasso.get()
                 .load(Constants.BASE_IMAGE_URL.concat(movieList.get(position).getPoster_path()))
                 .into(holder.movie_image);
@@ -63,7 +64,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder>{
         ImageView movie_image;
 
         @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }

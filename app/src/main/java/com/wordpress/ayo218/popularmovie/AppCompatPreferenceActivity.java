@@ -11,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+@SuppressWarnings("ConstantConditions")
 @SuppressLint("Registered")
 public class AppCompatPreferenceActivity extends PreferenceActivity{
 
