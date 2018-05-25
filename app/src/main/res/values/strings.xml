@@ -1,4 +1,15 @@
 <resources>
     <string name="app_name">PopularMovie</string>
     <string name="empty_movie">NO MOVIE</string>
+    <string name="sortby">SortBy</string>
+    <string name="sort_by_title">Sort by</string>
+    <string name="action_cancel">Cancel</string>
+
+    <string name="sort_popular">popularity.desc</string>
+    <string name="sort_rated">Highest Rated</string>
+
+    <string name="settings">Settings</string>
+    <string name="toprated">TopRated</string>
+
+    <string name="sort">sort</string>
 </resources>

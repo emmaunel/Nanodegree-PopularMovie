@@ -6,15 +6,18 @@ import android.os.Parcelable;
 public class Movie implements Parcelable{
     private String movie_title;
     private String poster_path;
+    private String backdrop_path;
     private String overview;
     private String release_date;
     private String vote_average;
 
-    public Movie(){}
+    public Movie() {
+    }
 
-    public Movie(String movie_title, String poster_path, String overview, String release_date, String vote_average) {
+    public Movie(String movie_title, String poster_path, String backdrop_path,String overview, String release_date, String vote_average) {
         this.movie_title = movie_title;
         this.poster_path = poster_path;
+        this.backdrop_path = backdrop_path;
         this.overview = overview;
         this.release_date = release_date;
         this.vote_average = vote_average;
@@ -23,6 +26,7 @@ public class Movie implements Parcelable{
     protected Movie(Parcel in) {
         movie_title = in.readString();
         poster_path = in.readString();
+        backdrop_path = in.readString();
         overview = in.readString();
         release_date = in.readString();
         vote_average = in.readString();
@@ -39,20 +43,6 @@ public class Movie implements Parcelable{
             return new Movie[size];
         }
     };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(movie_title);
-        parcel.writeString(poster_path);
-        parcel.writeString(overview);
-        parcel.writeString(release_date);
-        parcel.writeString(vote_average);
-    }
 
     public String getMovie_title() {
         return movie_title;
@@ -92,5 +82,28 @@ public class Movie implements Parcelable{
 
     public void setVote_average(String vote_average) {
         this.vote_average = vote_average;
+    }
+
+    public String getBackdrop_path() {
+        return backdrop_path;
+    }
+
+    public void setBackdrop_path(String backdrop_path) {
+        this.backdrop_path = backdrop_path;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(movie_title);
+        parcel.writeString(poster_path);
+        parcel.writeString(backdrop_path);
+        parcel.writeString(overview);
+        parcel.writeString(release_date);
+        parcel.writeString(vote_average);
     }
 }
