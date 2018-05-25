@@ -53,7 +53,8 @@
                 android:fontFamily="sans-serif-light"
                 android:gravity="center"
                 android:textSize="42sp"
-                tools:text="10.0"/>
+                tools:text="10.0"
+                tools:targetApi="jelly_bean" />
 
             <TextView
                 android:id="@+id/text_movie_release_date"
