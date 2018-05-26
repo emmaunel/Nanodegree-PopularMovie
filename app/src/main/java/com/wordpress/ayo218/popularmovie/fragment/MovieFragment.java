@@ -176,6 +176,7 @@ public class MovieFragment extends Fragment {
                         try {
                             for (int i = 0; i < 20; i++) {
                                 JSONObject result = response.getJSONArray("results").getJSONObject(i);
+                                long movie_id = result.getLong("id");
                                 String movie_title = result.getString("title");
                                 String img_path = result.getString("poster_path");
                                 String back_drop_path = result.getString("backdrop_path");
@@ -183,7 +184,7 @@ public class MovieFragment extends Fragment {
                                 String release_date = result.getString("release_date");
                                 String vote_average = result.getString("vote_average");
 
-                                movieList.add(new Movie(movie_title, img_path, back_drop_path, overview, release_date, vote_average));
+                                movieList.add(new Movie(movie_id, movie_title, img_path, back_drop_path, overview, release_date, vote_average));
                             }
                             adapter.notifyDataSetChanged();
                         } catch (JSONException e) {
