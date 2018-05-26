@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!--Change to CardView-->
+    <TextView
+        android:id="@+id/movie_review_author"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ayo"
+        android:textSize="20sp"
+        android:padding="4dp"/>
+
+    <TextView
+        android:id="@+id/movie_review_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/movie_review_author"
+        android:maxLines="5"
+        android:layout_marginBottom="5dp"/>
+</RelativeLayout>
