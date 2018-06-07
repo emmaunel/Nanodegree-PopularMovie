@@ -6,10 +6,14 @@ import android.os.Parcelable;
 public class Review implements Parcelable{
     private String author;
     private String content;
+    private String reivew_url;
 
-    public Review(String author, String content) {
+    public Review(){}
+
+    public Review(String author, String content, String reivew_url) {
         this.author = author;
         this.content = content;
+        this.reivew_url = reivew_url;
     }
 
     public String getAuthor() {
@@ -20,9 +24,14 @@ public class Review implements Parcelable{
         return content;
     }
 
+    public String getReivew_url() {
+        return reivew_url;
+    }
+
     protected Review(Parcel in) {
         author = in.readString();
         content = in.readString();
+        reivew_url = in.readString();
     }
 
     public static final Creator<Review> CREATOR = new Creator<Review>() {
@@ -46,5 +55,6 @@ public class Review implements Parcelable{
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(author);
         parcel.writeString(content);
+        parcel.writeString(reivew_url);
     }
 }

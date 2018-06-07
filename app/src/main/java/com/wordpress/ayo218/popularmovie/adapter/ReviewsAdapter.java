@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.wordpress.ayo218.popularmovie.Interface.OnItemClickListener;
 import com.wordpress.ayo218.popularmovie.R;
 import com.wordpress.ayo218.popularmovie.model.Review;
 
@@ -17,17 +18,28 @@ import butterknife.ButterKnife;
 
 public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHolder> {
 
-    private Context context;
-    private List<Review> movieReviews;
+    private final Context context;
+    private final List<Review> movieReviews;
+    private final OnItemClickListener listener;
 
-    public ReviewsAdapter(Context context, List<Review> movieReviews) {
+    public ReviewsAdapter(Context context, List<Review> movieReviews, OnItemClickListener listener) {
         this.context = context;
         this.movieReviews = movieReviews;
+        this.listener = listener;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_movie_review, parent, false));
+        View view = LayoutInflater.from(context).inflate(R.layout.item_movie_review, parent, false);
+        final ViewHolder viewHolder = new ViewHolder(view);
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onItemClick(view, viewHolder.getAdapterPosition());
+            }
+        });
+        return viewHolder;
     }
 
     @Override

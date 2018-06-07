@@ -24,6 +24,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.squareup.picasso.Picasso;
 import com.wordpress.ayo218.popularmovie.Constants;
+import com.wordpress.ayo218.popularmovie.Interface.OnItemClickListener;
 import com.wordpress.ayo218.popularmovie.R;
 import com.wordpress.ayo218.popularmovie.adapter.ReviewsAdapter;
 import com.wordpress.ayo218.popularmovie.model.Movie;
@@ -62,7 +63,6 @@ public class MovieDetailFragment extends Fragment {
 
     // TODO: 5/25/2018 FIx the UI for the review and also into that little glitch when scrolling
     // TODO: 5/25/2018 Add clicklisterner to each review
-    // TODO: 5/25/2018 Add a dark line for divider 
     // TODO: 5/25/2018 Add "Release Date" next to the date in the UI 
     public MovieDetailFragment() {}
 
@@ -92,7 +92,14 @@ public class MovieDetailFragment extends Fragment {
     }
 
     private void initReviews(){
-        adapter = new ReviewsAdapter(getContext(), reviewList);
+        adapter = new ReviewsAdapter(getContext(), reviewList, new OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Intent url_Intent = new Intent(Intent.ACTION_VIEW, Uri.parse(reviewList.get(position).getReivew_url()));
+                startActivity(url_Intent);
+            }
+
+        });
         reviews_recyclerview.setHasFixedSize(true);
         reviews_recyclerview.setLayoutManager(new LinearLayoutManager(getContext()));
         reviews_recyclerview.setAdapter(adapter);
@@ -120,8 +127,9 @@ public class MovieDetailFragment extends Fragment {
                             JSONObject jsonObject = results.getJSONObject(i);
                             String review_author = jsonObject.getString("author");
                             String review_content = jsonObject.getString("content");
+                            String review_url = jsonObject.getString("url");
 
-                            reviewList.add(new Review(review_author, review_content));
+                            reviewList.add(new Review(review_author, review_content, review_url));
                         }
                         adapter.notifyDataSetChanged();
                         }catch (JSONException e){

@@ -1,9 +1,16 @@
 package com.wordpress.ayo218.popularmovie.model;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+@Entity(tableName = "movie")
 public class Movie implements Parcelable{
+
+    @PrimaryKey(autoGenerate = true)
+    private int id;
     private long movie_id;
     private String movie_title;
     private String poster_path;
@@ -12,7 +19,23 @@ public class Movie implements Parcelable{
     private String release_date;
     private String vote_average;
 
-    public Movie(long movie_id, String movie_title, String poster_path, String backdrop_path, String overview, String release_date, String vote_average) {
+    @Ignore
+    public Movie(long movie_id, String movie_title, String poster_path,
+                 String backdrop_path, String overview, String release_date,
+                 String vote_average) {
+        this.movie_id = movie_id;
+        this.movie_title = movie_title;
+        this.poster_path = poster_path;
+        this.backdrop_path = backdrop_path;
+        this.overview = overview;
+        this.release_date = release_date;
+        this.vote_average = vote_average;
+    }
+
+    public Movie(int id, long movie_id, String movie_title,
+                 String poster_path, String backdrop_path, String overview,
+                 String release_date, String vote_average) {
+        this.id = id;
         this.movie_id = movie_id;
         this.movie_title = movie_title;
         this.poster_path = poster_path;
@@ -44,6 +67,9 @@ public class Movie implements Parcelable{
         }
     };
 
+    public int getId() {
+        return id;
+    }
 
     public String getMovie_title() {
         return movie_title;

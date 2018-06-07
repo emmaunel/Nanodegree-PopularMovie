@@ -11,12 +11,13 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 import com.wordpress.ayo218.popularmovie.Constants;
 import com.wordpress.ayo218.popularmovie.R;
+import com.wordpress.ayo218.popularmovie.database.AppExecutors;
+import com.wordpress.ayo218.popularmovie.database.favorites.FavoriteDatabase;
 import com.wordpress.ayo218.popularmovie.fragment.MovieDetailFragment;
 import com.wordpress.ayo218.popularmovie.model.Movie;
 
@@ -25,14 +26,18 @@ import butterknife.ButterKnife;
 
 public class DetailActivity extends AppCompatActivity {
 
+    private static final String TAG = "DetailActivity";
     @BindView(R.id.collapsing_toolbar_layout)
      CollapsingToolbarLayout collapsingToolbarLayout;
     @BindView(R.id.toolbar)
      Toolbar toolbar;
     @BindView(R.id.fab)
-     FloatingActionButton fab;
+    FloatingActionButton fab;
     @BindView(R.id.movie_poster)
      ImageView imageView;
+
+    //Database
+    FavoriteDatabase favoriteDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,12 +46,8 @@ public class DetailActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(findViewById(R.id.coordinator_layout), "Added to Favorites", Snackbar.LENGTH_LONG).show();
-            }
-        });
+        favoriteDatabase = FavoriteDatabase.getsInstance(this);
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setSupportActionBar(toolbar);
@@ -64,6 +65,14 @@ public class DetailActivity extends AppCompatActivity {
                 .fit()
                 .into(imageView);
 
+        fab.setOnClickListener(view -> {
+            // TODO: 6/6/2018 Check if a movie is already in the database
+            AppExecutors.getsInstance().diskIO().execute(() -> favoriteDatabase.favoriteDao().inserFavorite(data));
+            fab.setImageResource(R.drawable.ic_favorite_white);
+            Snackbar.make(findViewById(R.id.coordinator_layout), "Added to Favorites", Snackbar.LENGTH_LONG).show();
+        });
+
+
         intiFragment();
     }
 
@@ -73,6 +82,10 @@ public class DetailActivity extends AppCompatActivity {
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.movie_detail, fragment);
         transaction.commit();
+    }
+
+    private boolean isFavorite(Movie selectedMovie){
+        return false;
     }
 
 }

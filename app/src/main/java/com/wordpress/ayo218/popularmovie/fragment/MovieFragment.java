@@ -27,19 +27,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.wordpress.ayo218.popularmovie.Constants;
-import com.wordpress.ayo218.popularmovie.Interface.OnItemClickListener;
 import com.wordpress.ayo218.popularmovie.R;
 import com.wordpress.ayo218.popularmovie.SettingActivity;
 import com.wordpress.ayo218.popularmovie.activity.DetailActivity;
 import com.wordpress.ayo218.popularmovie.adapter.MovieAdapter;
+import com.wordpress.ayo218.popularmovie.database.AppDatabase;
 import com.wordpress.ayo218.popularmovie.model.Movie;
 
 import org.json.JSONException;
@@ -66,6 +65,10 @@ public class MovieFragment extends Fragment {
     private MovieAdapter adapter;
     private final List<Movie> movieList = new ArrayList<>();
 
+    //Database
+    AppDatabase database;
+
+
     public MovieFragment() {
     }
 
@@ -74,6 +77,9 @@ public class MovieFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, view);
+
+        //instancing the database
+        database = AppDatabase.getsInstance(getContext());
         return view;
     }
 
@@ -83,33 +89,44 @@ public class MovieFragment extends Fragment {
         final GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new MovieAdapter(getContext(), movieList, new OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                Intent intent = new Intent(getContext(), DetailActivity.class);
-                intent.putExtra(Intent.EXTRA_TEXT, movieList.get(position));
-                startActivity(intent);
+        adapter = new MovieAdapter(getContext(),recyclerView, movieList, (view1, position) -> {
+            Intent intent = new Intent(getContext(), DetailActivity.class);
+            intent.putExtra(Intent.EXTRA_TEXT, movieList.get(position));
+            startActivity(intent);
+        });
+
+        adapter.setLoadMore(() -> {
+            // TODO: 5/28/2018 Fix the glith
+            Log.i(TAG, "loadMore: ");
+            if (movieList.size() <= 20) {
+                movieList.add(null);
+                adapter.notifyItemInserted(movieList.size() - 1);
+                new Handler().postDelayed(() -> {
+                    movieList.remove(movieList.size() - 1);
+                    adapter.notifyItemRemoved(movieList.size());
+
+                    page += 1;
+                    loadMovies(page);
+
+                    adapter.notifyDataSetChanged();
+                    adapter.setLoading();
+                }, 3000);
+            }else {
+                Toast.makeText(getContext(), "Loaded", Toast.LENGTH_SHORT).show();
+
             }
         });
         recyclerView.setAdapter(adapter);
         setHasOptionsMenu(true);
 
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                //iterating thought the pages
-                page = page + 1;
-                loadMovies(page);
+        refreshLayout.setOnRefreshListener(() -> {
+            //iterating thought the pages
+            page = page + 1;
+            loadMovies(page);
 
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        refreshLayout.setRefreshing(false);
-                    }
-                }, 3000);
+            new Handler().postDelayed(() -> refreshLayout.setRefreshing(false), 3000);
 
 
-            }
         });
         refreshLayout.setColorSchemeResources(R.color.colorPrimary,
                 android.R.color.holo_green_dark,
@@ -169,34 +186,33 @@ public class MovieFragment extends Fragment {
         //Network functionality
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, uri_string, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            for (int i = 0; i < 20; i++) {
-                                JSONObject result = response.getJSONArray("results").getJSONObject(i);
-                                long movie_id = result.getLong("id");
-                                String movie_title = result.getString("title");
-                                String img_path = result.getString("poster_path");
-                                String back_drop_path = result.getString("backdrop_path");
-                                String overview = result.getString("overview");
-                                String release_date = result.getString("release_date");
-                                String vote_average = result.getString("vote_average");
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, uri_string, null, response -> {
+            try {
+                for (int i = 0; i < 20; i++) {
+                    JSONObject result = response.getJSONArray("results").getJSONObject(i);
+                    long movie_id = result.getLong("id");
+                    String movie_title = result.getString("title");
+                    String img_path = result.getString("poster_path");
+                    String back_drop_path = result.getString("backdrop_path");
+                    String overview = result.getString("overview");
+                    String release_date = result.getString("release_date");
+                    String vote_average = result.getString("vote_average");
 
-                                movieList.add(new Movie(movie_id, movie_title, img_path, back_drop_path, overview, release_date, vote_average));
-                            }
-                            adapter.notifyDataSetChanged();
-                        } catch (JSONException e) {
-                            Log.e(TAG, "onResponse: " + e.getMessage());
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "onErrorResponse: " + error.getMessage());
+                    final Movie movie = new Movie(movie_id, movie_title, img_path,
+                            back_drop_path, overview, release_date, vote_average);
+                    movieList.add(movie);
+
+                    //saving movies(hopefully it works)
+//                    AppExecutors.getsInstance().diskIO().execute(() -> {
+//                        database.movieDao().insertMovie(movie);
+//                        Log.i(TAG, "run: Add movies to database");
+//                    });
+                }
+                adapter.notifyDataSetChanged();
+            } catch (JSONException e) {
+                Log.e(TAG, "onResponse: " + e.getMessage());
             }
-        });
+        }, error -> Log.e(TAG, "onErrorResponse: " + error.getMessage()));
         requestQueue.add(request);
     }
 
