@@ -11,6 +11,7 @@ public class Movie implements Parcelable{
 
     @PrimaryKey(autoGenerate = true)
     private int id;
+
     private long movie_id;
     private String movie_title;
     private String poster_path;
@@ -18,6 +19,9 @@ public class Movie implements Parcelable{
     private String overview;
     private String release_date;
     private String vote_average;
+
+    // FIXME: 6/6/2018
+    private boolean isFavorite;
 
     @Ignore
     public Movie(long movie_id, String movie_title, String poster_path,

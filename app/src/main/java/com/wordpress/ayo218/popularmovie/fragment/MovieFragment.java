@@ -26,7 +26,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -55,10 +55,12 @@ public class MovieFragment extends Fragment {
 
     @BindView(R.id.recyclerview_movie)
     RecyclerView recyclerView;
-    @BindView(R.id.img_empty_view)
-    ImageView emptyView;
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout refreshLayout;
+    @BindView(R.id.view_no_movies)
+    RelativeLayout noMoviesLayout;
+    @BindView(R.id.view_no_favorite)
+    RelativeLayout noFavoriteLayout;
 
     private int page = 1;
 
@@ -217,7 +219,7 @@ public class MovieFragment extends Fragment {
     }
 
     private void showEmptyView() {
-        emptyView.setVisibility(View.VISIBLE);
+        noMoviesLayout.setVisibility(View.VISIBLE);
         //noinspection ConstantConditions
         Snackbar.make(getView(), "Cannot connect to the Internet", Snackbar.LENGTH_LONG).show();
     }

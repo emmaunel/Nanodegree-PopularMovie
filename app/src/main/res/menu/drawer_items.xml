@@ -4,6 +4,7 @@
         <item
             android:id="@+id/drawer_item_explore"
             android:checked="true"
+            android:icon="@drawable/ic_explore"
             android:title="@string/navigation_item_explore"/>
         <item
             android:id="@+id/drawer_item_favorites"
