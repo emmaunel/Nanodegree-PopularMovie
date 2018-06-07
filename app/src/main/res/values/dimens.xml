@@ -4,4 +4,5 @@
     <dimen name="movie_detail_content_margin_left_right">0dp</dimen>
     <dimen name="movie_detail_content_width">@dimen/match_parent</dimen>
     <dimen name="match_parent">-1</dimen>
+    <dimen name="item_load_more_size">48dp</dimen>
 </resources>
