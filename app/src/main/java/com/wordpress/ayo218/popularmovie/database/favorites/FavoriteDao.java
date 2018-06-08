@@ -15,12 +15,16 @@ public interface FavoriteDao {
     @Query("SELECT * FROM movie")
     List<Movie> loadFavorite();
 
+    @Query("SELECT movie_title FROM movie")
+    List<Movie> loadMovieIds();
+
     @Insert
-    void inserFavorite(Movie movie);
+    void insertFavorite(Movie movie);
 
     @Delete
     void deleteFavoriteMovie(Movie movie);
 
     @Query("SELECT * FROM movie WHERE id = :id")
     Movie getMovieById(int id);
+
 }

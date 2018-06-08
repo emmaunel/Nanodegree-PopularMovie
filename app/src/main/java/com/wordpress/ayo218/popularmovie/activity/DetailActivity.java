@@ -18,6 +18,7 @@ import com.wordpress.ayo218.popularmovie.Constants;
 import com.wordpress.ayo218.popularmovie.R;
 import com.wordpress.ayo218.popularmovie.database.AppExecutors;
 import com.wordpress.ayo218.popularmovie.database.favorites.FavoriteDatabase;
+import com.wordpress.ayo218.popularmovie.database.favorites.FavoriteService;
 import com.wordpress.ayo218.popularmovie.fragment.MovieDetailFragment;
 import com.wordpress.ayo218.popularmovie.model.Movie;
 
@@ -36,8 +37,11 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.movie_poster)
      ImageView imageView;
 
+    Movie data;
     //Database
     FavoriteDatabase favoriteDatabase;
+
+    FavoriteService service;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,17 +49,28 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
 
         ButterKnife.bind(this);
-
         favoriteDatabase = FavoriteDatabase.getsInstance(this);
+        data = getIntent().getParcelableExtra(Intent.EXTRA_TEXT);
 
 
+        fab.setOnClickListener(view -> {
+            AppExecutors.getsInstance().diskIO().execute(() -> favoriteDatabase.favoriteDao().insertFavorite(data));
+            fab.setImageResource(R.drawable.ic_favorite_white);
+            Snackbar.make(findViewById(R.id.coordinator_layout), "Added to Favorites", Snackbar.LENGTH_LONG).show();
+        });
+
+        initViews();
+        initFragment();
+    }
+
+    private void initViews(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setSupportActionBar(toolbar);
         }
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        Movie data = getIntent().getParcelableExtra(Intent.EXTRA_TEXT);
+
         collapsingToolbarLayout.setTitle(data.getMovie_title());
         collapsingToolbarLayout.setExpandedTitleColor(ContextCompat.getColor(this, android.R.color.transparent));
 
@@ -64,29 +79,14 @@ public class DetailActivity extends AppCompatActivity {
                 .centerCrop()
                 .fit()
                 .into(imageView);
-
-        fab.setOnClickListener(view -> {
-            AppExecutors.getsInstance().diskIO().execute(() -> favoriteDatabase.favoriteDao().inserFavorite(data));
-            fab.setImageResource(R.drawable.ic_favorite_white);
-            Snackbar.make(findViewById(R.id.coordinator_layout), "Added to Favorites", Snackbar.LENGTH_LONG).show();
-        });
-
-
-        intiFragment();
     }
 
-    private void intiFragment() {
+    private void initFragment() {
         MovieDetailFragment fragment = new MovieDetailFragment();
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.replace(R.id.movie_detail, fragment);
         transaction.commit();
-    }
-
-
-    // TODO: 6/7/2018 Come back
-    private boolean isFavorite(Movie selectedMovie){
-        return false;
     }
 
 }
