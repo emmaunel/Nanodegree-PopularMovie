@@ -66,7 +66,6 @@ public class DetailActivity extends AppCompatActivity {
                 .into(imageView);
 
         fab.setOnClickListener(view -> {
-            // TODO: 6/6/2018 Check if a movie is already in the database
             AppExecutors.getsInstance().diskIO().execute(() -> favoriteDatabase.favoriteDao().inserFavorite(data));
             fab.setImageResource(R.drawable.ic_favorite_white);
             Snackbar.make(findViewById(R.id.coordinator_layout), "Added to Favorites", Snackbar.LENGTH_LONG).show();
@@ -84,6 +83,8 @@ public class DetailActivity extends AppCompatActivity {
         transaction.commit();
     }
 
+
+    // TODO: 6/7/2018 Come back
     private boolean isFavorite(Movie selectedMovie){
         return false;
     }

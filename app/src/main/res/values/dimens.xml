@@ -5,4 +5,6 @@
     <dimen name="movie_detail_content_width">@dimen/match_parent</dimen>
     <dimen name="match_parent">-1</dimen>
     <dimen name="item_load_more_size">48dp</dimen>
+
+    <dimen name="trailer_offset">4dp</dimen>
 </resources>

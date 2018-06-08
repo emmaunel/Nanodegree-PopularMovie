@@ -18,6 +18,7 @@ import butterknife.ButterKnife;
 
 public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHolder> {
 
+    private static final String TAG = "ReviewsAdapter";
     private final Context context;
     private final List<Review> movieReviews;
     private final OnItemClickListener listener;
@@ -33,18 +34,12 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
         View view = LayoutInflater.from(context).inflate(R.layout.item_movie_review, parent, false);
         final ViewHolder viewHolder = new ViewHolder(view);
 
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                listener.onItemClick(view, viewHolder.getAdapterPosition());
-            }
-        });
+        view.setOnClickListener(view1 -> listener.onItemClick(view1, viewHolder.getAdapterPosition()));
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        // TODO: 5/25/2018 Add empty text saying NO REVIEWS YET
         holder.review_author.setText(movieReviews.get(position).getAuthor());
         holder.review_content.setText(movieReviews.get(position).getContent());
     }
@@ -53,6 +48,14 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ViewHold
     public int getItemCount() {
         return movieReviews.size();
     }
+
+    public Review getItem(int position){
+        if (movieReviews == null || position < 0 || position > movieReviews.size()){
+            return null;
+        }
+        return movieReviews.get(position);
+    }
+
 
     class ViewHolder extends RecyclerView.ViewHolder{
 

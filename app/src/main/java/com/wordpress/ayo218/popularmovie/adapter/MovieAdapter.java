@@ -98,8 +98,6 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             LoadingViewHolder loadingViewHolder = (LoadingViewHolder) holder;
             loadingViewHolder.progressBar.setIndeterminate(true);
         }
-
-//        Picasso.get().load(Constants.BASE_IMAGE_URL.concat(movieList.get(position).getPoster_path())).into(holder.movie_image);
     }
 
     @Override

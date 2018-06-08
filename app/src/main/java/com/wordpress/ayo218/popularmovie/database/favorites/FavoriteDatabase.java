@@ -8,7 +8,7 @@ import android.util.Log;
 
 import com.wordpress.ayo218.popularmovie.model.Movie;
 
-@Database(entities = {Movie.class}, version = 1)
+@Database(entities = {Movie.class}, version = 1, exportSchema = false)
 public abstract class FavoriteDatabase extends RoomDatabase {
 
     private static final String TAG = "FavoriteDatabase";

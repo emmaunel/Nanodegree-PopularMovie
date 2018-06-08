@@ -8,8 +8,6 @@ public class Review implements Parcelable{
     private String content;
     private String reivew_url;
 
-    public Review(){}
-
     public Review(String author, String content, String reivew_url) {
         this.author = author;
         this.content = content;

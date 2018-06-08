@@ -21,7 +21,7 @@ public class Movie implements Parcelable{
     private String vote_average;
 
     // FIXME: 6/6/2018
-    private boolean isFavorite;
+//    private boolean isFavorite;
 
     @Ignore
     public Movie(long movie_id, String movie_title, String poster_path,

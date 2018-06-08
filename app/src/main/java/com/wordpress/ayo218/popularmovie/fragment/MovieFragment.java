@@ -204,6 +204,7 @@ public class MovieFragment extends Fragment {
                             back_drop_path, overview, release_date, vote_average);
                     movieList.add(movie);
 
+                    // TODO: 6/7/2018 Add movies to db for offline
                     //saving movies(hopefully it works)
 //                    AppExecutors.getsInstance().diskIO().execute(() -> {
 //                        database.movieDao().insertMovie(movie);
