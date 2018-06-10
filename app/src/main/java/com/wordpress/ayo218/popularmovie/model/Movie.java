@@ -1,6 +1,5 @@
 package com.wordpress.ayo218.popularmovie.model;
 
-import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
@@ -13,7 +12,6 @@ public class Movie implements Parcelable{
     @PrimaryKey(autoGenerate = true)
     private int id;
 
-    @ColumnInfo(name = "movie_ids")
     private long movie_id;
     private String movie_title;
     private String poster_path;

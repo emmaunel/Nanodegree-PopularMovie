@@ -3,11 +3,11 @@ package com.wordpress.ayo218.popularmovie.adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.wordpress.ayo218.popularmovie.Interface.OnItemClickListener;
@@ -52,7 +52,8 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.ViewHo
         }
 
         Trailers trailers = trailersList.get(position);
-        Log.e(TAG, "onBindViewHolder: " +  String.format(YOUTUBE_THUMBNAIL, trailers.getTrailer_key()));
+        holder.txt_trailerName.setText(trailers.getTrailer_name());
+
         Picasso.get()
                 .load(String.format(YOUTUBE_THUMBNAIL, trailers.getTrailer_key()))
                 .fit()
@@ -78,6 +79,8 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.ViewHo
 
         @BindView(R.id.video_thumbnail)
         ImageView trailer_thumbnail;
+        @BindView(R.id.txt_trailerName)
+        TextView txt_trailerName;
 
         public ViewHolder(View itemView) {
             super(itemView);

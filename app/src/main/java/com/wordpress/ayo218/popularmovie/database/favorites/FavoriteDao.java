@@ -15,8 +15,8 @@ public interface FavoriteDao {
     @Query("SELECT * FROM movie")
     List<Movie> loadFavorite();
 
-    @Query("SELECT movie_title FROM movie")
-    List<Movie> loadMovieIds();
+//    @Query("SELECT movie_ids FROM movie")
+//    List<Movie> loadMovieIds();
 
     @Insert
     void insertFavorite(Movie movie);
