@@ -70,7 +70,6 @@ public class MovieFragment extends Fragment {
     //Database
     AppDatabase database;
 
-
     public MovieFragment() {
     }
 

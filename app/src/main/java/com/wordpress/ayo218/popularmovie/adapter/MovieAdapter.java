@@ -25,6 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final String TAG = "MovieAdapter";
     private Context context;
     private List<Movie> movieList;
     private OnItemClickListener listener;
@@ -34,6 +35,7 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     private boolean isLoading;
     private int visibleThreshold = 5;
     private int lastVisibleItem, totalItemCount;
+
 
     public MovieAdapter(Context context, List<Movie> movieList, final OnItemClickListener listener){
         this.context = context;
@@ -70,6 +72,7 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public int getItemViewType(int position) {
         return movieList.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
     }
+
 
     @NonNull
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -136,4 +139,6 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         movieList = favorites;
         notifyDataSetChanged();
     }
+
+
 }

@@ -25,6 +25,8 @@ import butterknife.ButterKnife;
 
 public class FavoritesFragment extends Fragment {
 
+    private static final String TAG = "FavoritesFragment";
+
     @BindView(R.id.recyclerview_movie)
     RecyclerView recyclerView;
     @BindView(R.id.view_no_favorite)
@@ -44,27 +46,58 @@ public class FavoritesFragment extends Fragment {
 
         // FIXME: 6/6/2018 Make sure a movie is not added twice
         // TODO: 6/6/2018 Add empty view
-        List<Movie> movieList = database.favoriteDao().loadFavorite();
-        adapter = new MovieAdapter(getContext(), movieList, (view1, position) -> {
-            Intent intent = new Intent(getContext(), DetailActivity.class);
-            intent.putExtra(Intent.EXTRA_TEXT, movieList.get(position));
-            startActivity(intent);
-        });
+//        LiveData<List<Movie>> movieList = database.favoriteDao().loadFavorite();
+//        movieList.observe(getActivity(), new Observer<List<Movie>>() {
+//            @Override
+//            public void onChanged(@Nullable List<Movie> movies) {
+//
+//                adapter = new MovieAdapter(getContext(), movies, (view1, position) -> {
+//                    Intent intent = new Intent(getContext(), DetailActivity.class);
+//                    intent.putExtra(Intent.EXTRA_TEXT, movies.get(position));
+//                    startActivity(intent);
+//                });
+//                adapter.setFavorites(movies);
+//            }
+//        });
 
-        adapter.setFavorites(database.favoriteDao().loadFavorite());
 
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
+        List<Movie> movieList = database.favoriteDao().loadFavorite();
+
+        // FIXME: 6/10/2018 Change to LiveData
+//        movieList.observe(getActivity(), new Observer<List<Movie>>() {
+//            @Override
+//            public void onChanged(@Nullable List<Movie> movies) {
+//
+//                adapter = new MovieAdapter(getContext(), movies, (view1, position) -> {
+//                    Intent intent = new Intent(getContext(), DetailActivity.class);
+//                    intent.putExtra(Intent.EXTRA_TEXT, movies.get(position));
+//                    startActivity(intent);
+//                });
+//                adapter.setFavorites(movies);
+//            }
+//        });
+
+        adapter = new MovieAdapter(getContext(), movieList, (view1, position) -> {
+            Intent intent = new Intent(getContext(), DetailActivity.class);
+            intent.putExtra(Intent.EXTRA_TEXT, movieList.get(position));
+            startActivity(intent);
+        });
+        adapter.setFavorites(movieList);
+
+        adapter.notifyDataSetChanged();
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        recyclerView.setAdapter(adapter);
 
+        recyclerView.setAdapter(adapter);
     }
 
-    private void showEmptyView(){
-    noFavoriteLayout.setVisibility(View.VISIBLE);
+    private void showEmptyView() {
+        noFavoriteLayout.setVisibility(View.VISIBLE);
     }
 }
