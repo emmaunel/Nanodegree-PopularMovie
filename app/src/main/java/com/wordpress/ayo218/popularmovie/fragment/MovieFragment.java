@@ -38,7 +38,6 @@ import com.wordpress.ayo218.popularmovie.R;
 import com.wordpress.ayo218.popularmovie.SettingActivity;
 import com.wordpress.ayo218.popularmovie.activity.DetailActivity;
 import com.wordpress.ayo218.popularmovie.adapter.MovieAdapter;
-import com.wordpress.ayo218.popularmovie.database.AppDatabase;
 import com.wordpress.ayo218.popularmovie.model.Movie;
 
 import org.json.JSONException;
@@ -68,7 +67,6 @@ public class MovieFragment extends Fragment {
     private final List<Movie> movieList = new ArrayList<>();
 
     //Database
-    AppDatabase database;
 
     public MovieFragment() {
     }
@@ -80,7 +78,6 @@ public class MovieFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         //instancing the database
-        database = AppDatabase.getsInstance(getContext());
         return view;
     }
 

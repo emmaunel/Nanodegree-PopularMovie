@@ -1,6 +1,5 @@
 package com.wordpress.ayo218.popularmovie.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,12 +12,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.wordpress.ayo218.popularmovie.R;
-import com.wordpress.ayo218.popularmovie.activity.DetailActivity;
 import com.wordpress.ayo218.popularmovie.adapter.MovieAdapter;
-import com.wordpress.ayo218.popularmovie.database.favorites.FavoriteDatabase;
-import com.wordpress.ayo218.popularmovie.model.Movie;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,14 +28,13 @@ public class FavoritesFragment extends Fragment {
 
     private MovieAdapter adapter;
 
-    private FavoriteDatabase database;
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, view);
-        database = FavoriteDatabase.getsInstance(getContext());
 
 
         // FIXME: 6/6/2018 Make sure a movie is not added twice
@@ -67,7 +60,6 @@ public class FavoritesFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
-        List<Movie> movieList = database.favoriteDao().loadFavorite();
 
         // FIXME: 6/10/2018 Change to LiveData
 //        movieList.observe(getActivity(), new Observer<List<Movie>>() {
@@ -82,13 +74,6 @@ public class FavoritesFragment extends Fragment {
 //                adapter.setFavorites(movies);
 //            }
 //        });
-
-        adapter = new MovieAdapter(getContext(), movieList, (view1, position) -> {
-            Intent intent = new Intent(getContext(), DetailActivity.class);
-            intent.putExtra(Intent.EXTRA_TEXT, movieList.get(position));
-            startActivity(intent);
-        });
-        adapter.setFavorites(movieList);
 
         adapter.notifyDataSetChanged();
         recyclerView.setHasFixedSize(true);

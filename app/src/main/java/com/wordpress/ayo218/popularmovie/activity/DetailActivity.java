@@ -11,15 +11,12 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 import com.wordpress.ayo218.popularmovie.Constants;
 import com.wordpress.ayo218.popularmovie.R;
-import com.wordpress.ayo218.popularmovie.database.AppExecutors;
-import com.wordpress.ayo218.popularmovie.database.favorites.FavoriteDatabase;
 import com.wordpress.ayo218.popularmovie.fragment.MovieDetailFragment;
 import com.wordpress.ayo218.popularmovie.model.Movie;
 
@@ -39,10 +36,8 @@ public class DetailActivity extends AppCompatActivity {
      ImageView imageView;
 
     Movie data;
-    //Database
-    FavoriteDatabase favoriteDatabase;
 
-    Boolean favorited = false;
+    Boolean favorite = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +45,7 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
 
         ButterKnife.bind(this);
-        favoriteDatabase = FavoriteDatabase.getsInstance(this);
+
         data = getIntent().getParcelableExtra(Intent.EXTRA_TEXT); 
         fab.setOnClickListener(this::favoriteUpdate);
 
@@ -86,13 +81,13 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void favoriteUpdate(View view){
-        if (favorited){
-            favorited = false;
+        if (favorite){
+            favorite = false;
             changeFabImage();
             removeMovie();
             Snackbar.make(view, "Removed From Favorites", Snackbar.LENGTH_LONG).show();
         } else{
-            favorited = true;
+            favorite = true;
             changeFabImage();
             saveMovie();
             Snackbar.make(view, "Added to Favorites", Snackbar.LENGTH_LONG).show();
@@ -101,7 +96,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void changeFabImage(){
-        if (favorited){
+        if (favorite){
             fab.setImageResource(R.drawable.ic_favorite_white);
         } else {
             fab.setImageResource(R.drawable.ic_favorite);
@@ -109,31 +104,14 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void removeMovie(){
-        Log.i(TAG, "removeMovie: Here");
-        // FIXME: 6/10/2018 Not working
-        AppExecutors.getsInstance().diskIO().execute(() -> favoriteDatabase.favoriteDao().deleteFavoriteMovie(data));
+
     }
 
     private void saveMovie(){
-        AppExecutors.getsInstance().diskIO().execute(() -> favoriteDatabase.favoriteDao().insertFavorite(data));
     }
 
     private void checkFavorites(){
-        AppExecutors.getsInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                // FIXME: 6/10/2018 Understand what this means
-                Movie movie = favoriteDatabase.favoriteDao().getMovieById(data.getMovie_id());
-                favorited = movie != null;
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        changeFabImage();
-                    }
-                });
-            }
-        });
     }
 
 }
