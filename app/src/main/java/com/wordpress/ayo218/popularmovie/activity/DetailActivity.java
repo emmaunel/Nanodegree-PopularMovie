@@ -17,6 +17,8 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 import com.wordpress.ayo218.popularmovie.Constants;
 import com.wordpress.ayo218.popularmovie.R;
+import com.wordpress.ayo218.popularmovie.database.AppDatabase;
+import com.wordpress.ayo218.popularmovie.database.AppExecutors;
 import com.wordpress.ayo218.popularmovie.fragment.MovieDetailFragment;
 import com.wordpress.ayo218.popularmovie.model.Movie;
 
@@ -36,15 +38,17 @@ public class DetailActivity extends AppCompatActivity {
      ImageView imageView;
 
     Movie data;
-
     Boolean favorite = false;
+
+    private AppDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-
         ButterKnife.bind(this);
+
+        database = AppDatabase.getsInstance(getApplicationContext());
 
         data = getIntent().getParcelableExtra(Intent.EXTRA_TEXT); 
         fab.setOnClickListener(this::favoriteUpdate);
@@ -104,14 +108,49 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void removeMovie(){
+        int movie_id = data.getMovie_id();
+        String movie_title = data.getMovie_title();
+        String poster_path = data.getPoster_path();
+        String backdrop_path = data.getBackdrop_path();
+        String overview = data.getOverview();
+        String release_date = data.getRelease_date();
+        String vote_average = data.getVote_average();
 
+        Movie movie = new Movie(movie_id,movie_title,poster_path,backdrop_path,
+                overview,release_date,vote_average);
+
+        AppExecutors.getsInstance().diskIO().execute( () -> database.favoriteDao().deleteMovie(movie));
     }
 
     private void saveMovie(){
+        int movie_id = data.getMovie_id();
+        String movie_title = data.getMovie_title();
+        String poster_path = data.getPoster_path();
+        String backdrop_path = data.getBackdrop_path();
+        String overview = data.getOverview();
+        String release_date = data.getRelease_date();
+        String vote_averagae = data.getVote_average();
+
+        Movie movie = new Movie(movie_id,movie_title,poster_path,backdrop_path,
+                overview,release_date,vote_averagae);
+        AppExecutors.getsInstance().diskIO().execute(() -> database.favoriteDao().insertMovie(movie));
     }
 
     private void checkFavorites(){
+        AppExecutors.getsInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                Movie movie = database.favoriteDao().getMovieById(data.getMovie_id());
+                favorite = movie != null;
 
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        changeFabImage();
+                    }
+                });
+            }
+        });
     }
 
 }

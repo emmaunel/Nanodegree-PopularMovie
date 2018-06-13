@@ -188,7 +188,7 @@ public class MovieFragment extends Fragment {
             try {
                 for (int i = 0; i < 20; i++) {
                     JSONObject result = response.getJSONArray("results").getJSONObject(i);
-                    long movie_id = result.getLong("id");
+                    int movie_id = result.getInt("id");
                     String movie_title = result.getString("title");
                     String img_path = result.getString("poster_path");
                     String back_drop_path = result.getString("backdrop_path");
