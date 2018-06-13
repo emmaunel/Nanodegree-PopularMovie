@@ -36,7 +36,7 @@
                 android:value=".activity.MainActivity" />
         </activity>
         <activity
-            android:name=".SettingActivity"
+            android:name=".activity.SettingActivity"
             android:parentActivityName=".activity.MainActivity"
             tools:ignore="UnusedAttribute">
             <meta-data

@@ -1,4 +1,4 @@
-package com.wordpress.ayo218.popularmovie;
+package com.wordpress.ayo218.popularmovie.utils;
 
 import android.annotation.SuppressLint;
 import android.content.res.Configuration;

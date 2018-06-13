@@ -8,9 +8,7 @@ import android.os.Parcelable;
 @Entity(tableName = "movies")
 public class Movie implements Parcelable{
 
-    @PrimaryKey(autoGenerate = true)
-    private int id;
-
+    @PrimaryKey
     private int movie_id;
     private String movie_title;
     private String poster_path;
@@ -80,14 +78,6 @@ public class Movie implements Parcelable{
         parcel.writeString(overview);
         parcel.writeString(release_date);
         parcel.writeString(vote_average);
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public int getMovie_id() {

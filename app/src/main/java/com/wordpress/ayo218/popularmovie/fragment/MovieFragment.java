@@ -33,9 +33,9 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.wordpress.ayo218.popularmovie.Constants;
+import com.wordpress.ayo218.popularmovie.utils.Constants;
 import com.wordpress.ayo218.popularmovie.R;
-import com.wordpress.ayo218.popularmovie.SettingActivity;
+import com.wordpress.ayo218.popularmovie.activity.SettingActivity;
 import com.wordpress.ayo218.popularmovie.activity.DetailActivity;
 import com.wordpress.ayo218.popularmovie.adapter.MovieAdapter;
 import com.wordpress.ayo218.popularmovie.model.Movie;
@@ -100,7 +100,8 @@ public class MovieFragment extends Fragment {
                 movieList.add(null);
                 adapter.notifyItemInserted(movieList.size() - 1);
                 new Handler().postDelayed(() -> {
-                    movieList.remove(movieList.size() - 1);
+                    // TODO: 6/12/2018 Come back
+//                    movieList.remove(movieList.size() - 1);
                     adapter.notifyItemRemoved(movieList.size());
 
                     page += 1;

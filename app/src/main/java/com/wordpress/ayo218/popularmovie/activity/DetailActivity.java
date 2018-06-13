@@ -15,7 +15,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
-import com.wordpress.ayo218.popularmovie.Constants;
+import com.wordpress.ayo218.popularmovie.utils.Constants;
 import com.wordpress.ayo218.popularmovie.R;
 import com.wordpress.ayo218.popularmovie.database.AppDatabase;
 import com.wordpress.ayo218.popularmovie.database.AppExecutors;
@@ -137,19 +137,10 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void checkFavorites(){
-        AppExecutors.getsInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                Movie movie = database.favoriteDao().getMovieById(data.getMovie_id());
-                favorite = movie != null;
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        changeFabImage();
-                    }
-                });
-            }
+        AppExecutors.getsInstance().diskIO().execute(() -> {
+            Movie movie = database.favoriteDao().getMovieById(data.getMovie_id());
+            favorite = movie != null;
+            runOnUiThread(this::changeFabImage);
         });
     }
 

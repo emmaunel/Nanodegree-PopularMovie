@@ -96,4 +96,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             setTitle(getString(R.string.navigation_item_favorites));
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        // TODO: if fragment is in favorites return to explore fragment
+    }
 }
