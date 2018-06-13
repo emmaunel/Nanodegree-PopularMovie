@@ -1,5 +1,6 @@
 package com.wordpress.ayo218.popularmovie.fragment;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,17 +16,13 @@ import android.widget.RelativeLayout;
 import com.wordpress.ayo218.popularmovie.R;
 import com.wordpress.ayo218.popularmovie.activity.DetailActivity;
 import com.wordpress.ayo218.popularmovie.adapter.MovieAdapter;
-import com.wordpress.ayo218.popularmovie.database.favorites.FavoriteDatabase;
-import com.wordpress.ayo218.popularmovie.model.Movie;
-
-import java.util.List;
+import com.wordpress.ayo218.popularmovie.database.AppDatabase;
+import com.wordpress.ayo218.popularmovie.utils.MainViewHolder;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class FavoritesFragment extends Fragment {
-
-    private static final String TAG = "FavoritesFragment";
 
     @BindView(R.id.recyclerview_movie)
     RecyclerView recyclerView;
@@ -33,71 +30,39 @@ public class FavoritesFragment extends Fragment {
     RelativeLayout noFavoriteLayout;
 
     private MovieAdapter adapter;
+    private AppDatabase database;
 
-    private FavoriteDatabase database;
-
+    // TODO: 6/6/2018 Add empty view
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, view);
-        database = FavoriteDatabase.getsInstance(getContext());
-
-
-        // FIXME: 6/6/2018 Make sure a movie is not added twice
-        // TODO: 6/6/2018 Add empty view
-//        LiveData<List<Movie>> movieList = database.favoriteDao().loadFavorite();
-//        movieList.observe(getActivity(), new Observer<List<Movie>>() {
-//            @Override
-//            public void onChanged(@Nullable List<Movie> movies) {
-//
-//                adapter = new MovieAdapter(getContext(), movies, (view1, position) -> {
-//                    Intent intent = new Intent(getContext(), DetailActivity.class);
-//                    intent.putExtra(Intent.EXTRA_TEXT, movies.get(position));
-//                    startActivity(intent);
-//                });
-//                adapter.setFavorites(movies);
-//            }
-//        });
-
-
+        database = AppDatabase.getsInstance(getContext());
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
-        List<Movie> movieList = database.favoriteDao().loadFavorite();
-
-        // FIXME: 6/10/2018 Change to LiveData
-//        movieList.observe(getActivity(), new Observer<List<Movie>>() {
-//            @Override
-//            public void onChanged(@Nullable List<Movie> movies) {
-//
-//                adapter = new MovieAdapter(getContext(), movies, (view1, position) -> {
-//                    Intent intent = new Intent(getContext(), DetailActivity.class);
-//                    intent.putExtra(Intent.EXTRA_TEXT, movies.get(position));
-//                    startActivity(intent);
-//                });
-//                adapter.setFavorites(movies);
-//            }
-//        });
-
-        adapter = new MovieAdapter(getContext(), movieList, (view1, position) -> {
-            Intent intent = new Intent(getContext(), DetailActivity.class);
-            intent.putExtra(Intent.EXTRA_TEXT, movieList.get(position));
-            startActivity(intent);
-        });
-        adapter.setFavorites(movieList);
-
-        adapter.notifyDataSetChanged();
+        MainViewHolder viewHolder = ViewModelProviders.of(this).get(MainViewHolder.class);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
-        recyclerView.setAdapter(adapter);
+        viewHolder.getMoviesList().observe(this, movies -> {
+            adapter = new MovieAdapter(getContext(), movies, (view1, position) -> {
+                Intent intent = new Intent(getContext(), DetailActivity.class);
+                intent.putExtra(Intent.EXTRA_TEXT, movies.get(position));
+                startActivity(intent);
+            });
+            adapter.setFavorites(movies);
+            adapter.notifyDataSetChanged();
+            recyclerView.setAdapter(adapter);
+        });
     }
 
     private void showEmptyView() {
         noFavoriteLayout.setVisibility(View.VISIBLE);
     }
+
+
 }

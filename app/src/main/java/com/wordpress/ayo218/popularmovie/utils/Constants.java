@@ -1,4 +1,6 @@
-package com.wordpress.ayo218.popularmovie;
+package com.wordpress.ayo218.popularmovie.utils;
+
+import com.wordpress.ayo218.popularmovie.BuildConfig;
 
 public class Constants{
     public static final String API_KEY = BuildConfig.API_KEY;

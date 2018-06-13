@@ -33,12 +33,11 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.wordpress.ayo218.popularmovie.Constants;
+import com.wordpress.ayo218.popularmovie.utils.Constants;
 import com.wordpress.ayo218.popularmovie.R;
-import com.wordpress.ayo218.popularmovie.SettingActivity;
+import com.wordpress.ayo218.popularmovie.activity.SettingActivity;
 import com.wordpress.ayo218.popularmovie.activity.DetailActivity;
 import com.wordpress.ayo218.popularmovie.adapter.MovieAdapter;
-import com.wordpress.ayo218.popularmovie.database.AppDatabase;
 import com.wordpress.ayo218.popularmovie.model.Movie;
 
 import org.json.JSONException;
@@ -68,7 +67,6 @@ public class MovieFragment extends Fragment {
     private final List<Movie> movieList = new ArrayList<>();
 
     //Database
-    AppDatabase database;
 
     public MovieFragment() {
     }
@@ -80,7 +78,6 @@ public class MovieFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         //instancing the database
-        database = AppDatabase.getsInstance(getContext());
         return view;
     }
 
@@ -103,7 +100,8 @@ public class MovieFragment extends Fragment {
                 movieList.add(null);
                 adapter.notifyItemInserted(movieList.size() - 1);
                 new Handler().postDelayed(() -> {
-                    movieList.remove(movieList.size() - 1);
+                    // TODO: 6/12/2018 Come back
+//                    movieList.remove(movieList.size() - 1);
                     adapter.notifyItemRemoved(movieList.size());
 
                     page += 1;
@@ -191,7 +189,7 @@ public class MovieFragment extends Fragment {
             try {
                 for (int i = 0; i < 20; i++) {
                     JSONObject result = response.getJSONArray("results").getJSONObject(i);
-                    long movie_id = result.getLong("id");
+                    int movie_id = result.getInt("id");
                     String movie_title = result.getString("title");
                     String img_path = result.getString("poster_path");
                     String back_drop_path = result.getString("backdrop_path");

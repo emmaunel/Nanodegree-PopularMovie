@@ -45,6 +45,9 @@ dependencies {
     implementation 'com.android.support:preference-v7:27.1.1'
     implementation 'com.android.volley:volley:1.0.0'
 
+    //Debug database
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.3'
+
     //Room(Database)
     implementation 'android.arch.persistence.room:runtime:1.1.0'
     annotationProcessor 'android.arch.persistence.room:compiler:1.1.0'
