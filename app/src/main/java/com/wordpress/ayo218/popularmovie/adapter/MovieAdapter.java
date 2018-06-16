@@ -13,11 +13,11 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.squareup.picasso.Picasso;
+import com.wordpress.ayo218.popularmovie.utils.Constants;
 import com.wordpress.ayo218.popularmovie.Interface.LoadMoreInterface;
 import com.wordpress.ayo218.popularmovie.Interface.OnItemClickListener;
 import com.wordpress.ayo218.popularmovie.R;
 import com.wordpress.ayo218.popularmovie.model.Movie;
-import com.wordpress.ayo218.popularmovie.utils.Constants;
 
 import java.util.List;
 
