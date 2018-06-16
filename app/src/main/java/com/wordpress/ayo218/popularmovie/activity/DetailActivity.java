@@ -1,5 +1,6 @@
 package com.wordpress.ayo218.popularmovie.activity;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,12 +16,13 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
-import com.wordpress.ayo218.popularmovie.utils.Constants;
 import com.wordpress.ayo218.popularmovie.R;
 import com.wordpress.ayo218.popularmovie.database.AppDatabase;
 import com.wordpress.ayo218.popularmovie.database.AppExecutors;
 import com.wordpress.ayo218.popularmovie.fragment.MovieDetailFragment;
 import com.wordpress.ayo218.popularmovie.model.Movie;
+import com.wordpress.ayo218.popularmovie.utils.Constants;
+import com.wordpress.ayo218.popularmovie.utils.MainViewHolder;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,6 +43,7 @@ public class DetailActivity extends AppCompatActivity {
     Boolean favorite = false;
 
     private AppDatabase database;
+    private MainViewHolder holder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +52,7 @@ public class DetailActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         database = AppDatabase.getsInstance(getApplicationContext());
-
+        holder = ViewModelProviders.of(this).get(MainViewHolder.class);
         data = getIntent().getParcelableExtra(Intent.EXTRA_TEXT); 
         fab.setOnClickListener(this::favoriteUpdate);
 
@@ -133,7 +136,8 @@ public class DetailActivity extends AppCompatActivity {
 
         Movie movie = new Movie(movie_id,movie_title,poster_path,backdrop_path,
                 overview,release_date,vote_averagae);
-        AppExecutors.getsInstance().diskIO().execute(() -> database.favoriteDao().insertMovie(movie));
+//        AppExecutors.getsInstance().diskIO().execute(() -> database.favoriteDao().insertMovie(movie));
+        holder.insertMovie(movie);
     }
 
     private void checkFavorites(){

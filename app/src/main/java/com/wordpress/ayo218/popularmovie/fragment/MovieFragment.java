@@ -51,6 +51,7 @@ import butterknife.ButterKnife;
 
 public class MovieFragment extends Fragment {
     private static final String TAG = "MovieFragment";
+    private static final String RECYCLER_POSITION = "position";
 
     @BindView(R.id.recyclerview_movie)
     RecyclerView recyclerView;
@@ -66,18 +67,11 @@ public class MovieFragment extends Fragment {
     private MovieAdapter adapter;
     private final List<Movie> movieList = new ArrayList<>();
 
-    //Database
-
-    public MovieFragment() {
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, view);
-
-        //instancing the database
         return view;
     }
 
@@ -134,23 +128,36 @@ public class MovieFragment extends Fragment {
 
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (isConnected()) {
-            loadMovies(page);
-        } else {
-            showEmptyView();
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (!movieList.isEmpty() && isConnected()) {
-            movieList.clear();
-        }
-    }
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//        if (isConnected()) {
+//            loadMovies(page);
+//        } else {
+//            showEmptyView();
+//        }
+//    }
+//
+//    @Override
+//    public void onPause() {
+//        super.onPause();
+//        if (!movieList.isEmpty() && isConnected()) {
+//            movieList.clear();
+//        }
+//    }
+//
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        Log.i(TAG, "onResume: Here");
+////        if (recyclerView.getAdapter() == null || recyclerView.getAdapter().getItemCount() == 0) {
+////            recyclerView.setVisibility(View.GONE);
+////            noMoviesLayout.setVisibility(View.VISIBLE);
+////        } else {
+////            recyclerView.setVisibility(View.VISIBLE);
+////            noMoviesLayout.setVisibility(View.GONE);
+////        }
+//    }
 
     @SuppressWarnings("ConstantConditions")
     private boolean isConnected() {
@@ -222,6 +229,19 @@ public class MovieFragment extends Fragment {
         Snackbar.make(getView(), "Cannot connect to the Internet", Snackbar.LENGTH_LONG).show();
     }
 
+    private void loadCache(){
+        if (!isConnected()){
+            // TODO: 6/13/2018 Get data from database
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // TODO: 6/13/2018 Come back
+//        outState.putParcelable(RECYCLER_POSITION, recyclerView);
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main_menu, menu);
@@ -234,7 +254,6 @@ public class MovieFragment extends Fragment {
             case R.id.action_sort:
                 startActivity(new Intent(getContext(), SettingActivity.class));
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

@@ -20,8 +20,6 @@ public abstract class AppDatabase extends RoomDatabase {
             synchronized (LOCK) {
                 database = Room.databaseBuilder(context.getApplicationContext(),
                         AppDatabase.class, AppDatabase.DATABASE_TABLE)
-                        // TODO: 6/12/2018 Remove this
-                        .allowMainThreadQueries()
                         .build();
             }
         }

@@ -9,8 +9,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
 
 import com.wordpress.ayo218.popularmovie.R;
 import com.wordpress.ayo218.popularmovie.fragment.FavoritesFragment;
@@ -19,7 +17,7 @@ import com.wordpress.ayo218.popularmovie.fragment.MovieFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     @BindView(R.id.navigation_view)
     NavigationView navigationView;
@@ -48,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         toolbar.setNavigationIcon(R.drawable.ic_menu);
         toolbar.setNavigationOnClickListener(navigationView -> drawerLayout.openDrawer(GravityCompat.START));
         navigationView.setNavigationItemSelectedListener(this);
+
     }
 
 
@@ -59,7 +58,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 if (selectedNavigationItem != 0) {
                     getSupportFragmentManager().beginTransaction().replace(R.id.homeFragment, new MovieFragment()).commit();
                     selectedNavigationItem = 0;
-
                 }
                 drawerLayout.closeDrawers();
                 updateTitle();
@@ -79,15 +77,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-
-    }
 
     private void updateTitle() {
         if (selectedNavigationItem == 0) {

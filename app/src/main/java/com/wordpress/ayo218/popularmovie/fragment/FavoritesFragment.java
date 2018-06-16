@@ -16,7 +16,6 @@ import android.widget.RelativeLayout;
 import com.wordpress.ayo218.popularmovie.R;
 import com.wordpress.ayo218.popularmovie.activity.DetailActivity;
 import com.wordpress.ayo218.popularmovie.adapter.MovieAdapter;
-import com.wordpress.ayo218.popularmovie.database.AppDatabase;
 import com.wordpress.ayo218.popularmovie.utils.MainViewHolder;
 
 import butterknife.BindView;
@@ -30,7 +29,7 @@ public class FavoritesFragment extends Fragment {
     RelativeLayout noFavoriteLayout;
 
     private MovieAdapter adapter;
-    private AppDatabase database;
+
 
     // TODO: 6/6/2018 Add empty view
     @Nullable
@@ -38,7 +37,6 @@ public class FavoritesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, view);
-        database = AppDatabase.getsInstance(getContext());
         return view;
     }
 
@@ -48,6 +46,9 @@ public class FavoritesFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
+        if (viewHolder.getMoviesList() == null){
+            showEmptyView();
+        }
         viewHolder.getMoviesList().observe(this, movies -> {
             adapter = new MovieAdapter(getContext(), movies, (view1, position) -> {
                 Intent intent = new Intent(getContext(), DetailActivity.class);
