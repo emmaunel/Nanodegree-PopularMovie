@@ -26,18 +26,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.wordpress.ayo218.popularmovie.Constants;
-import com.wordpress.ayo218.popularmovie.Interface.OnItemClickListener;
+import com.wordpress.ayo218.popularmovie.utils.Constants;
 import com.wordpress.ayo218.popularmovie.R;
-import com.wordpress.ayo218.popularmovie.SettingActivity;
+import com.wordpress.ayo218.popularmovie.activity.SettingActivity;
 import com.wordpress.ayo218.popularmovie.activity.DetailActivity;
 import com.wordpress.ayo218.popularmovie.adapter.MovieAdapter;
 import com.wordpress.ayo218.popularmovie.model.Movie;
@@ -53,21 +51,21 @@ import butterknife.ButterKnife;
 
 public class MovieFragment extends Fragment {
     private static final String TAG = "MovieFragment";
+    private static final String RECYCLER_POSITION = "position";
 
     @BindView(R.id.recyclerview_movie)
     RecyclerView recyclerView;
-    @BindView(R.id.img_empty_view)
-    ImageView emptyView;
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout refreshLayout;
+    @BindView(R.id.view_no_movies)
+    RelativeLayout noMoviesLayout;
+    @BindView(R.id.view_no_favorite)
+    RelativeLayout noFavoriteLayout;
 
     private int page = 1;
 
     private MovieAdapter adapter;
     private final List<Movie> movieList = new ArrayList<>();
-
-    public MovieFragment() {
-    }
 
     @Nullable
     @Override
@@ -83,33 +81,45 @@ public class MovieFragment extends Fragment {
         final GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new MovieAdapter(getContext(), movieList, new OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                Intent intent = new Intent(getContext(), DetailActivity.class);
-                intent.putExtra(Intent.EXTRA_TEXT, movieList.get(position));
-                startActivity(intent);
+        adapter = new MovieAdapter(getContext(),recyclerView, movieList, (view1, position) -> {
+            Intent intent = new Intent(getContext(), DetailActivity.class);
+            intent.putExtra(Intent.EXTRA_TEXT, movieList.get(position));
+            startActivity(intent);
+        });
+
+        adapter.setLoadMore(() -> {
+            // TODO: 5/28/2018 Fix the glith
+            Log.i(TAG, "loadMore: ");
+            if (movieList.size() <= 20) {
+                movieList.add(null);
+                adapter.notifyItemInserted(movieList.size() - 1);
+                new Handler().postDelayed(() -> {
+                    // TODO: 6/12/2018 Come back
+//                    movieList.remove(movieList.size() - 1);
+                    adapter.notifyItemRemoved(movieList.size());
+
+                    page += 1;
+                    loadMovies(page);
+
+                    adapter.notifyDataSetChanged();
+                    adapter.setLoading();
+                }, 3000);
+            }else {
+                Toast.makeText(getContext(), "Loaded", Toast.LENGTH_SHORT).show();
+
             }
         });
         recyclerView.setAdapter(adapter);
         setHasOptionsMenu(true);
 
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                //iterating thought the pages
-                page = page + 1;
-                loadMovies(page);
+        refreshLayout.setOnRefreshListener(() -> {
+            //iterating thought the pages
+            page = page + 1;
+            loadMovies(page);
 
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        refreshLayout.setRefreshing(false);
-                    }
-                }, 3000);
+            new Handler().postDelayed(() -> refreshLayout.setRefreshing(false), 3000);
 
 
-            }
         });
         refreshLayout.setColorSchemeResources(R.color.colorPrimary,
                 android.R.color.holo_green_dark,
@@ -118,23 +128,36 @@ public class MovieFragment extends Fragment {
 
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (isConnected()) {
-            loadMovies(page);
-        } else {
-            showEmptyView();
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (!movieList.isEmpty() && isConnected()) {
-            movieList.clear();
-        }
-    }
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//        if (isConnected()) {
+//            loadMovies(page);
+//        } else {
+//            showEmptyView();
+//        }
+//    }
+//
+//    @Override
+//    public void onPause() {
+//        super.onPause();
+//        if (!movieList.isEmpty() && isConnected()) {
+//            movieList.clear();
+//        }
+//    }
+//
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        Log.i(TAG, "onResume: Here");
+////        if (recyclerView.getAdapter() == null || recyclerView.getAdapter().getItemCount() == 0) {
+////            recyclerView.setVisibility(View.GONE);
+////            noMoviesLayout.setVisibility(View.VISIBLE);
+////        } else {
+////            recyclerView.setVisibility(View.VISIBLE);
+////            noMoviesLayout.setVisibility(View.GONE);
+////        }
+//    }
 
     @SuppressWarnings("ConstantConditions")
     private boolean isConnected() {
@@ -169,41 +192,54 @@ public class MovieFragment extends Fragment {
         //Network functionality
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
 
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, uri_string, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            for (int i = 0; i < 20; i++) {
-                                JSONObject result = response.getJSONArray("results").getJSONObject(i);
-                                long movie_id = result.getLong("id");
-                                String movie_title = result.getString("title");
-                                String img_path = result.getString("poster_path");
-                                String back_drop_path = result.getString("backdrop_path");
-                                String overview = result.getString("overview");
-                                String release_date = result.getString("release_date");
-                                String vote_average = result.getString("vote_average");
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, uri_string, null, response -> {
+            try {
+                for (int i = 0; i < 20; i++) {
+                    JSONObject result = response.getJSONArray("results").getJSONObject(i);
+                    int movie_id = result.getInt("id");
+                    String movie_title = result.getString("title");
+                    String img_path = result.getString("poster_path");
+                    String back_drop_path = result.getString("backdrop_path");
+                    String overview = result.getString("overview");
+                    String release_date = result.getString("release_date");
+                    String vote_average = result.getString("vote_average");
 
-                                movieList.add(new Movie(movie_id, movie_title, img_path, back_drop_path, overview, release_date, vote_average));
-                            }
-                            adapter.notifyDataSetChanged();
-                        } catch (JSONException e) {
-                            Log.e(TAG, "onResponse: " + e.getMessage());
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "onErrorResponse: " + error.getMessage());
+                    final Movie movie = new Movie(movie_id, movie_title, img_path,
+                            back_drop_path, overview, release_date, vote_average);
+                    movieList.add(movie);
+
+                    // TODO: 6/7/2018 Add movies to db for offline
+                    //saving movies(hopefully it works)
+//                    AppExecutors.getsInstance().diskIO().execute(() -> {
+//                        database.movieDao().insertMovie(movie);
+//                        Log.i(TAG, "run: Add movies to database");
+//                    });
+                }
+                adapter.notifyDataSetChanged();
+            } catch (JSONException e) {
+                Log.e(TAG, "onResponse: " + e.getMessage());
             }
-        });
+        }, error -> Log.e(TAG, "onErrorResponse: " + error.getMessage()));
         requestQueue.add(request);
     }
 
     private void showEmptyView() {
-        emptyView.setVisibility(View.VISIBLE);
+        noMoviesLayout.setVisibility(View.VISIBLE);
         //noinspection ConstantConditions
         Snackbar.make(getView(), "Cannot connect to the Internet", Snackbar.LENGTH_LONG).show();
+    }
+
+    private void loadCache(){
+        if (!isConnected()){
+            // TODO: 6/13/2018 Get data from database
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // TODO: 6/13/2018 Come back
+//        outState.putParcelable(RECYCLER_POSITION, recyclerView);
     }
 
     @Override
@@ -218,7 +254,6 @@ public class MovieFragment extends Fragment {
             case R.id.action_sort:
                 startActivity(new Intent(getContext(), SettingActivity.class));
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

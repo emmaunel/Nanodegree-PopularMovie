@@ -16,12 +16,69 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <ImageView
-        android:id="@+id/img_empty_view"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_centerInParent="true"
-        android:src="@drawable/error_cloud"
-        android:contentDescription="@string/error_image"
-        android:visibility="gone" />
+
+    <!--<ImageView-->
+        <!--android:id="@+id/img_empty_view"-->
+        <!--android:layout_width="100dp"-->
+        <!--android:layout_height="100dp"-->
+        <!--android:layout_centerInParent="true"-->
+        <!--android:src="@drawable/movie_icon"-->
+        <!--android:contentDescription="@string/error_image"-->
+        <!--android:visibility="gone"/>-->
+
+    <!--<ImageView-->
+        <!--android:id="@+id/empty_favorite_img"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:src="@drawable/ic_favorite"-->
+        <!--android:layout_centerInParent="true"/>-->
+
+    <RelativeLayout
+        android:id="@+id/view_no_movies"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/no_movie_img"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerInParent="true"
+            android:contentDescription="@string/error_image"
+            android:src="@drawable/movie_icon"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/no_movie_img"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="No Movies"
+            android:textStyle="bold"/>
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/view_no_favorite"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/no_favorite_img"
+            android:layout_width="wrap_content"
+            android:layout_height="70dp"
+            android:layout_centerInParent="true"
+            android:contentDescription="@string/error_image"
+            android:src="@drawable/movie_icon"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/no_favorite_img"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="No Favorites Yet"
+            android:textStyle="bold"/>
+    </RelativeLayout>
 </RelativeLayout>
