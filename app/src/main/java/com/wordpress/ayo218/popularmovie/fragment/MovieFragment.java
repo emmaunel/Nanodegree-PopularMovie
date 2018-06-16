@@ -27,18 +27,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.wordpress.ayo218.popularmovie.utils.Constants;
 import com.wordpress.ayo218.popularmovie.R;
-import com.wordpress.ayo218.popularmovie.activity.SettingActivity;
 import com.wordpress.ayo218.popularmovie.activity.DetailActivity;
+import com.wordpress.ayo218.popularmovie.activity.SettingActivity;
 import com.wordpress.ayo218.popularmovie.adapter.MovieAdapter;
 import com.wordpress.ayo218.popularmovie.model.Movie;
+import com.wordpress.ayo218.popularmovie.utils.Constants;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -63,6 +62,7 @@ public class MovieFragment extends Fragment {
     RelativeLayout noFavoriteLayout;
 
     private int page = 1;
+    long currentVisiblePosition = 0;
 
     private MovieAdapter adapter;
     private final List<Movie> movieList = new ArrayList<>();
@@ -81,7 +81,7 @@ public class MovieFragment extends Fragment {
         final GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new MovieAdapter(getContext(),recyclerView, movieList, (view1, position) -> {
+        adapter = new MovieAdapter(getContext(), recyclerView, movieList, (view1, position) -> {
             Intent intent = new Intent(getContext(), DetailActivity.class);
             intent.putExtra(Intent.EXTRA_TEXT, movieList.get(position));
             startActivity(intent);
@@ -90,37 +90,25 @@ public class MovieFragment extends Fragment {
         adapter.setLoadMore(() -> {
             // TODO: 5/28/2018 Fix the glith
             Log.i(TAG, "loadMore: ");
-            if (movieList.size() <= 20) {
-                movieList.add(null);
-                adapter.notifyItemInserted(movieList.size() - 1);
-                new Handler().postDelayed(() -> {
-                    // TODO: 6/12/2018 Come back
-//                    movieList.remove(movieList.size() - 1);
-                    adapter.notifyItemRemoved(movieList.size());
+            recyclerView.post(new Runnable() {
+                @Override
+                public void run() {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            page += 1;
+                            loadMovies(page);
 
-                    page += 1;
-                    loadMovies(page);
-
-                    adapter.notifyDataSetChanged();
-                    adapter.setLoading();
-                }, 3000);
-            }else {
-                Toast.makeText(getContext(), "Loaded", Toast.LENGTH_SHORT).show();
-
-            }
+                            adapter.notifyDataSetChanged();
+                            adapter.setLoading();
+                        }
+                    }, 1000);
+                }
+            });
         });
         recyclerView.setAdapter(adapter);
         setHasOptionsMenu(true);
 
-        refreshLayout.setOnRefreshListener(() -> {
-            //iterating thought the pages
-            page = page + 1;
-            loadMovies(page);
-
-            new Handler().postDelayed(() -> refreshLayout.setRefreshing(false), 3000);
-
-
-        });
         refreshLayout.setColorSchemeResources(R.color.colorPrimary,
                 android.R.color.holo_green_dark,
                 android.R.color.holo_orange_dark,
@@ -128,36 +116,35 @@ public class MovieFragment extends Fragment {
 
     }
 
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        if (isConnected()) {
-//            loadMovies(page);
-//        } else {
-//            showEmptyView();
-//        }
-//    }
-//
-//    @Override
-//    public void onPause() {
-//        super.onPause();
-//        if (!movieList.isEmpty() && isConnected()) {
-//            movieList.clear();
-//        }
-//    }
-//
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        Log.i(TAG, "onResume: Here");
-////        if (recyclerView.getAdapter() == null || recyclerView.getAdapter().getItemCount() == 0) {
-////            recyclerView.setVisibility(View.GONE);
-////            noMoviesLayout.setVisibility(View.VISIBLE);
-////        } else {
-////            recyclerView.setVisibility(View.VISIBLE);
-////            noMoviesLayout.setVisibility(View.GONE);
-////        }
-//    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (isConnected()) {
+            loadMovies(page);
+        } else {
+            showEmptyView();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (!movieList.isEmpty() && isConnected()) {
+            movieList.clear();
+        }
+
+        currentVisiblePosition = ((GridLayoutManager) recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+        Log.i(TAG, "onPause: I am here and also this " + currentVisiblePosition);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i(TAG, "onResume: Here");
+        ((GridLayoutManager) recyclerView.getLayoutManager()).scrollToPosition((int) currentVisiblePosition);
+        Log.i(TAG, "onResume: Position: " + currentVisiblePosition);
+        currentVisiblePosition = 0;
+    }
 
     @SuppressWarnings("ConstantConditions")
     private boolean isConnected() {
@@ -224,22 +211,25 @@ public class MovieFragment extends Fragment {
     }
 
     private void showEmptyView() {
-        noMoviesLayout.setVisibility(View.VISIBLE);
+        if (recyclerView.getAdapter() == null || recyclerView.getAdapter().getItemCount() == 0) {
+            recyclerView.setVisibility(View.GONE);
+            noMoviesLayout.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            noMoviesLayout.setVisibility(View.GONE);
+        }
+
+
         //noinspection ConstantConditions
         Snackbar.make(getView(), "Cannot connect to the Internet", Snackbar.LENGTH_LONG).show();
     }
 
-    private void loadCache(){
-        if (!isConnected()){
-            // TODO: 6/13/2018 Get data from database
-        }
-    }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         // TODO: 6/13/2018 Come back
-//        outState.putParcelable(RECYCLER_POSITION, recyclerView);
+        outState.putParcelable(RECYCLER_POSITION, recyclerView.getLayoutManager().onSaveInstanceState());
     }
 
     @Override
