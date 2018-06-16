@@ -136,7 +136,6 @@ public class DetailActivity extends AppCompatActivity {
 
         Movie movie = new Movie(movie_id,movie_title,poster_path,backdrop_path,
                 overview,release_date,vote_averagae);
-//        AppExecutors.getsInstance().diskIO().execute(() -> database.favoriteDao().insertMovie(movie));
         holder.insertMovie(movie);
     }
 

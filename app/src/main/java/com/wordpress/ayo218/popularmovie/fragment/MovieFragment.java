@@ -62,12 +62,13 @@ public class MovieFragment extends Fragment {
     RelativeLayout noFavoriteLayout;
 
     private int page = 1;
-    long currentVisiblePosition = 0;
     private GridLayoutManager layoutManager;
 
     private MovieAdapter adapter;
     private final List<Movie> movieList = new ArrayList<>();
 
+    // TODO: 6/16/2018 Work on saving scroll position during screen rotation 
+    // TODO: 6/16/2018 Change the number of rows to 3 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -96,31 +97,17 @@ public class MovieFragment extends Fragment {
 
         adapter.setLoadMore(() -> {
             Log.i(TAG, "loadMore: Here");
-            recyclerView.post(new Runnable() {
-                @Override
-                public void run() {
-                    new Handler().postDelayed(() -> {
-                        page += 1;
-                        loadMovies(page);
+            recyclerView.post(() -> new Handler().postDelayed(() -> {
+                page += 1;
+                loadMovies(page);
 
-                        adapter.notifyDataSetChanged();
-                        adapter.setLoading();
-                    }, 1000);
-                }
-            });
+                adapter.notifyDataSetChanged();
+                adapter.setLoading();
+            }, 1000));
         });
         recyclerView.setAdapter(adapter);
         setHasOptionsMenu(true);
-//
-//        refreshLayout.setOnRefreshListener(() -> {
-//            //iterating thought the pages
-//            page = page + 1;
-//            loadMovies(page);
-//
-//            new Handler().postDelayed(() -> refreshLayout.setRefreshing(false), 3000);
-//
-//
-//        });
+        
         refreshLayout.setColorSchemeResources(R.color.colorPrimary,
                 android.R.color.holo_green_dark,
                 android.R.color.holo_orange_dark,
@@ -144,18 +131,12 @@ public class MovieFragment extends Fragment {
         if (!movieList.isEmpty() && isConnected()) {
             movieList.clear();
         }
-        currentVisiblePosition = ((GridLayoutManager)recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
-        Log.i(TAG, "onPause: I am here and also this " + currentVisiblePosition);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         Log.i(TAG, "onResume: Here");
-//        ((GridLayoutManager) recyclerView.getLayoutManager()).scrollToPosition();
-        Log.i(TAG, "onResume: Position: " + currentVisiblePosition);
-        currentVisiblePosition = 0;
-
     }
 
     @SuppressWarnings("ConstantConditions")
