@@ -15,6 +15,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -83,8 +84,10 @@ public class MovieFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         adapter = new MovieAdapter(getContext(), recyclerView, movieList, (view1, position) -> {
             Intent intent = new Intent(getContext(), DetailActivity.class);
+            // TODO: 8/6/2018 Come back to make sure this works
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), getView().findViewById(R.id.movie_image), getString(R.string.image_trans));
             intent.putExtra(Intent.EXTRA_TEXT, movieList.get(position));
-            startActivity(intent);
+            startActivity(intent, options.toBundle());
         });
 
         adapter.setLoadMore(() -> {

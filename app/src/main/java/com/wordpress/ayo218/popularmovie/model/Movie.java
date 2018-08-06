@@ -29,19 +29,6 @@ public class Movie implements Parcelable{
         this.vote_average = vote_average;
     }
 
-//    public Movie(int id, long movie_id, String movie_title,
-//                 String poster_path, String backdrop_path, String overview,
-//                 String release_date, String vote_average) {
-//        this.id = id;
-//        this.movie_id = movie_id;
-//        this.movie_title = movie_title;
-//        this.poster_path = poster_path;
-//        this.backdrop_path = backdrop_path;
-//        this.overview = overview;
-//        this.release_date = release_date;
-//        this.vote_average = vote_average;
-//    }
-
     private Movie(Parcel in) {
         movie_id = in.readInt();
         movie_title = in.readString();

@@ -1,6 +1,7 @@
 package com.wordpress.ayo218.popularmovie.fragment;
 
 
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,10 +12,13 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.transition.Slide;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,14 +27,14 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.squareup.picasso.Picasso;
-import com.wordpress.ayo218.popularmovie.utils.Constants;
-import com.wordpress.ayo218.popularmovie.utils.ItemOffsetDecoration;
 import com.wordpress.ayo218.popularmovie.R;
 import com.wordpress.ayo218.popularmovie.adapter.ReviewsAdapter;
 import com.wordpress.ayo218.popularmovie.adapter.TrailersAdapter;
 import com.wordpress.ayo218.popularmovie.model.Movie;
 import com.wordpress.ayo218.popularmovie.model.Review;
 import com.wordpress.ayo218.popularmovie.model.Trailers;
+import com.wordpress.ayo218.popularmovie.utils.Constants;
+import com.wordpress.ayo218.popularmovie.utils.ItemOffsetDecoration;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -86,6 +90,15 @@ public class MovieDetailFragment extends Fragment {
         //noinspection ConstantConditions
         data = getActivity().getIntent().getParcelableExtra(Intent.EXTRA_TEXT);
         ButterKnife.bind(this, view);
+        // TODO: 8/6/2018 Trying our slide transition
+        Slide slide = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            slide = new Slide();
+            slide.setSlideEdge(Gravity.BOTTOM);
+            slide.setInterpolator(AnimationUtils.loadInterpolator(getContext(), android.R.interpolator.linear_out_slow_in));
+            getActivity().getWindow().setEnterTransition(slide);
+        }
+
         initReviews();
         initTrailers();
         return view;

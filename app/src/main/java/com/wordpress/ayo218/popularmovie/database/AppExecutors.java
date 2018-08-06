@@ -9,7 +9,7 @@ import java.util.concurrent.Executors;
 
 public class AppExecutors {
 
-    public static final Object LOCK = new Object();
+    private static final Object LOCK = new Object();
     private static AppExecutors sInstance;
     private final Executor diskIO;
     private final Executor mainThread;

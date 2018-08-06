@@ -22,4 +22,7 @@
     <string name="navigation_item_favorites">Favorites</string>
     <string name="trailers">Trailers</string>
 
+    <!--Transition & Animation-->
+    <string name="image_trans">myImage</string>
+
 </resources>
